@@ -1,0 +1,10 @@
+# Güvenlik Dosyaları
+config.js
+
+# Python Sanal Ortamı
+.venv/
+.venv
+venv/
+
+# PyCharm Ayar Dosyaları
+.idea/

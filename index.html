@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <script src="config.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GunsaAI | Salih Gündüz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050505;
+            color: #ffffff;
+            margin: 0;
+            background-image:
+                linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Geliştirilmiş, pürüzsüz arka plan aydınlatması */
+        .ambient-glow {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: -2;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(6, 182, 212, 0.15), transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(147, 51, 234, 0.15), transparent 50%);
+            filter: blur(80px);
+        }
+
+        /* Izgara üzerinde dolaşan parıltılar */
+        .particle-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle { position: absolute; width: 4px; height: 4px; border-radius: 50%; opacity: 0; animation-fill-mode: both; }
+        .p-cyan { background: #06b6d4; box-shadow: 0 0 12px 3px rgba(6, 182, 212, 0.9); }
+        .p-purple { background: #a855f7; box-shadow: 0 0 12px 3px rgba(168, 85, 247, 0.9); }
+
+        @keyframes travelRight { 0% { left: -5%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { left: 105%; opacity: 0; } }
+        @keyframes travelLeft { 0% { right: -5%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { right: 105%; opacity: 0; } }
+        @keyframes travelDown { 0% { top: -5%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 105%; opacity: 0; } }
+        @keyframes travelUp { 0% { bottom: -5%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { bottom: 105%; opacity: 0; } }
+
+        .node-1 { top: 20%; animation: travelRight 18s linear infinite; }
+        .node-2 { left: 35%; animation: travelDown 24s linear infinite; animation-delay: 2s; }
+        .node-3 { top: 75%; animation: travelLeft 20s linear infinite; animation-delay: 5s; }
+        .node-4 { left: 85%; animation: travelUp 26s linear infinite; animation-delay: 1s; }
+        .node-5 { top: 45%; animation: travelRight 30s linear infinite; animation-delay: 10s; }
+
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+
+        .fade-in { animation: fadeIn 0.4s ease-in-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .switch-slider { transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1); }
+
+        #chat-messages::-webkit-scrollbar { width: 6px; }
+        #chat-messages::-webkit-scrollbar-track { background: rgba(6, 182, 212, 0.1); border-radius: 10px; }
+        #chat-messages::-webkit-scrollbar-thumb { background: rgba(6, 182, 212, 0.5); border-radius: 10px; }
+
+        /* YENİ EKLENEN: Aktif Menü Alt Çizgi Animasyonu */
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .nav-link.active {
+            color: #ffffff;
+            font-weight: 600;
+        }
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, #06b6d4, #a855f7);
+            border-radius: 999px;
+            animation: slideLine 0.3s ease-out forwards;
+        }
+        @keyframes slideLine {
+            from { width: 0; opacity: 0; }
+            to { width: 100%; opacity: 1; }
+        }
+
+        /* Galerilerde ilk ve son resmin merkeze gelebilmesi için görünmez boşluklar */
+        .gallery-container::before,
+        .gallery-container::after {
+            content: '';
+            flex-shrink: 0;
+            width: 12.5%; /* Mobil için: (100 - 75) / 2 */
+        }
+
+        @media (min-width: 768px) {
+            .gallery-container::before,
+            .gallery-container::after {
+                width: 25%; /* PC (Masaüstü) için: (100 - 50) / 2 */
+            }
+        }
+
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col relative">
+
+    <div class="ambient-glow"></div>
+
+    <div class="particle-container">
+        <div class="particle p-cyan node-1"></div>
+        <div class="particle p-purple node-2"></div>
+        <div class="particle p-cyan node-3"></div>
+        <div class="particle p-purple node-4"></div>
+        <div class="particle p-cyan node-5"></div>
+    </div>
+
+    <nav class="w-full p-6 flex justify-between items-center max-w-7xl mx-auto z-10">
+        <div onclick="showSection('home')" class="flex items-center gap-2 font-bold text-lg cursor-pointer hover:opacity-80 transition">
+            <img src="jpegs/figure2.jpg" alt="GunsaAI Logo" class="w-8 h-8 rounded-md border border-cyan-500 object-cover shadow-[0_0_10px_rgba(6,182,212,0.5)]">
+            <span class="text-white">GunsaAI</span><span class="text-cyan-400">.dev</span>
+        </div>
+
+        <div class="hidden lg:flex items-center gap-6 text-sm text-slate-400">
+            <button id="nav-hakkimda" onclick="showSection('hakkimda')" class="nav-link hover:text-cyan-400 transition" data-tr="Hakkımda" data-en="About Me">Hakkımda</button>
+            <button id="nav-yetenekler" onclick="showSection('yetenekler')" class="nav-link hover:text-cyan-400 transition" data-tr="Yetenekler" data-en="Skills">Yetenekler</button>
+            <button id="nav-projeler" onclick="showSection('projeler')" class="nav-link hover:text-cyan-400 transition" data-tr="Projeler" data-en="Projects">Projeler</button>
+            <button id="nav-bitirme" onclick="showSection('bitirme')" class="nav-link hover:text-cyan-400 transition" data-tr="Bitirme Projesi" data-en="Graduation Project">Bitirme Projesi</button>
+            <button id="nav-deneyim" onclick="showSection('deneyim')" class="nav-link hover:text-cyan-400 transition" data-tr="Deneyim" data-en="Experience">Deneyim</button>
+            <button id="nav-sertifikalar" onclick="showSection('sertifikalar')" class="nav-link hover:text-cyan-400 transition" data-tr="Etkinlikler ve Sertifikalar" data-en="Events and Certificates">Etkinlikler ve Sertifikalar</button>
+            <!-- Kaynaklar Butonu Buradan Çıkarıldı -->
+            <button id="nav-iletisim" onclick="showSection('iletisim')" class="nav-link hover:text-cyan-400 transition" data-tr="İletişim" data-en="Contact">İletişim</button>
+        </div>
+
+        <div class="hidden md:flex items-center">
+            <div class="relative inline-flex items-center cursor-pointer w-16 h-8 bg-cyan-950/40 border border-cyan-800 rounded-full" onclick="toggleLanguage()">
+                <div class="absolute left-1 top-1 w-6 h-6 bg-cyan-500 rounded-full shadow-[0_0_10px_rgba(6,182,212,0.6)] switch-slider" id="lang-slider"></div>
+                <span class="w-1/2 text-center text-[10px] font-bold z-10 text-cyan-50 transition-colors" id="text-tr">TR</span>
+                <span class="w-1/2 text-center text-[10px] font-bold z-10 text-slate-500 transition-colors" id="text-en">EN</span>
+            </div>
+        </div>
+    </nav>
+
+    <main id="home-section" class="flex-grow flex flex-col items-center justify-center px-4 text-center z-10 mt-12 mb-24 fade-in">
+
+        <div class="mb-8 relative animate-float">
+            <img src="jpegs/figure1.jpg" alt="Salih Gündüz Profil" class="w-32 h-32 rounded-3xl object-cover border border-cyan-500/50 shadow-[0_0_40px_rgba(6,182,212,0.3)]">
+        </div>
+
+        <div class="mb-6 flex items-center gap-2 px-4 py-1.5 rounded-full border border-cyan-800 bg-cyan-950/40 backdrop-blur-sm">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,1)]"></span>
+            <span class="text-sm font-medium text-cyan-300" data-tr="Elektrik & Elektronik Mühendisliği" data-en="Electrical & Electronics Engineering">Elektrik & Elektronik Mühendisliği</span>
+        </div>
+
+        <h1 class="text-4xl md:text-6xl font-bold text-white tracking-tight max-w-4xl mb-4 flex flex-col gap-4 sm:gap-6">
+            <span data-tr="Hayalden Gerçeğe Bir" data-en="An Engineering Story">
+                Hayalden Gerçeğe Bir
+            </span>
+            <span data-tr="Mühendislik Öyküsü" data-en="From Dream to Reality">
+                Mühendislik Öyküsü
+            </span>
+        </h1>
+
+        <div class="text-xl md:text-2xl font-mono mt-2 mb-10 flex items-center justify-center gap-2">
+            <span class="text-cyan-400 cursor-pointer hover:text-cyan-300 transition hover:shadow-[0_0_10px_rgba(6,182,212,0.5)] rounded px-2" onclick="toggleChat()" title="Yapay Zeka Asistanı ile Konuş">GunsaAI</span>
+            <span class="text-slate-500">-</span>
+            <span class="text-cyan-300">Salih</span>
+            <span class="text-cyan-300">Gündüz</span>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+            <button onclick="showSection('projeler')" class="border border-purple-600/60 bg-purple-900/10 hover:bg-purple-900/20 text-purple-300 px-8 py-3 rounded-lg font-semibold flex items-center justify-center gap-2 transition" data-tr="Projelere Göz At" data-en="Explore Projects">
+                Projelere Göz At
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19L20 5M20 5v10M20 5H10"></path></svg>
+            </button>
+
+            <button onclick="toggleChat()" class="border border-purple-600/60 bg-purple-900/10 hover:bg-purple-900/20 text-purple-300 px-8 py-3 rounded-lg font-semibold flex items-center justify-center transition" data-tr="GunsaAI İle Görüş" data-en="Chat With GunsaAI">
+                GunsaAI İle Görüş
+            </button>
+
+            <button onclick="showSection('iletisim')" class="border border-purple-600/60 bg-purple-900/10 hover:bg-purple-900/20 text-purple-300 px-8 py-3 rounded-lg font-semibold flex items-center justify-center transition" data-tr="İletişim" data-en="Contact">
+                İletişim
+            </button>
+        </div>
+    </main>
+
+    <div class="w-full pb-32 flex-grow z-10">
+        <section id="hakkimda" class="hidden fade-in min-h-[60vh] flex-col items-center justify-center border border-dashed border-cyan-800/50 bg-cyan-950/10 rounded-xl text-slate-400 p-8 max-w-7xl mx-auto w-full px-4 md:px-8">
+            <p>Yükleniyor...</p>
+        </section>
+
+        <section id="yetenekler" class="hidden fade-in min-h-[60vh] flex-col items-center justify-center border border-dashed border-cyan-800/50 bg-cyan-950/10 rounded-xl text-slate-400 p-8 max-w-7xl mx-auto w-full px-4 md:px-8">
+            <p>Yükleniyor...</p>
+        </section>
+
+        <section id="projeler" class="hidden fade-in min-h-[60vh] flex-col items-center justify-center border border-dashed border-cyan-800/50 bg-cyan-950/10 rounded-xl text-slate-400 p-8 w-full px-4 md:px-8">
+            <p>Yükleniyor...</p>
+        </section>
+
+        <section id="bitirme" class="hidden fade-in min-h-[60vh] flex-col items-center justify-center border border-dashed border-cyan-800/50 bg-cyan-950/10 rounded-xl text-slate-400 p-8 w-full px-4 md:px-8">
+            <p>Yükleniyor...</p>
+        </section>
+
+        <section id="deneyim" class="hidden fade-in min-h-[60vh] flex-col items-center justify-center border border-dashed border-cyan-800/50 bg-cyan-950/10 rounded-xl text-slate-400 p-8 max-w-7xl mx-auto w-full px-4 md:px-8">
+            <p>Yükleniyor...</p>
+        </section>
+
+        <section id="sertifikalar" class="hidden fade-in min-h-[60vh] flex-col items-center justify-center border border-dashed border-cyan-800/50 bg-cyan-950/10 rounded-xl text-slate-400 p-8 w-full px-4 md:px-8">
+            <p>Yükleniyor...</p>
+        </section>
+
+        <!-- Kaynaklar Section Buradan Çıkarıldı -->
+
+        <section id="iletisim" class="hidden fade-in min-h-[60vh] flex-col items-center justify-center border border-dashed border-cyan-800/50 bg-cyan-950/10 rounded-xl text-slate-400 p-8 max-w-7xl mx-auto w-full px-4 md:px-8">
+            <p>Yükleniyor...</p>
+        </section>
+    </div>
+
+    <div id="image-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-[#050505]/95 backdrop-blur-md opacity-0 transition-all duration-300">
+        <button onclick="closeImageModal()" class="absolute top-6 right-6 text-white hover:text-cyan-400 p-2 transition z-50">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <img id="modal-img" src="" class="max-w-[95%] max-h-[90vh] object-contain rounded-xl shadow-[0_0_50px_rgba(6,182,212,0.4)] transform scale-95 transition-transform duration-300">
+    </div>
+
+    <div id="ai-chat-modal" class="hidden fixed bottom-24 right-6 w-[90%] max-w-[380px] bg-[#09090b]/95 border border-cyan-500/50 rounded-2xl shadow-[0_0_40px_rgba(6,182,212,0.2)] backdrop-blur-xl flex-col overflow-hidden z-50 transform scale-95 opacity-0 transition-all duration-300">
+        <div class="bg-gradient-to-r from-cyan-950 to-[#09090b] p-4 border-b border-cyan-800/50 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-cyan-900 flex items-center justify-center border border-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.5)]">
+                    <svg class="w-4 h-4 text-cyan-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm text-white">GunsaAI Asistanı</h3>
+                    <div class="flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
+                        <span class="text-[10px] text-cyan-400">Çevrimiçi (Gemini API)</span>
+                    </div>
+                </div>
+            </div>
+            <button onclick="toggleChat()" class="text-slate-400 hover:text-white transition">&times;</button>
+        </div>
+
+        <div id="chat-messages" class="h-80 p-4 overflow-y-auto flex flex-col gap-4 text-sm font-medium">
+            <div class="self-start max-w-[85%] bg-cyan-900/40 border border-cyan-800/50 text-cyan-50 p-3 rounded-2xl rounded-tl-sm">
+                Merhaba! Ben Salih'in akıllı asistanıyım. Projeleri, eğitim hayatı veya diğer tüm teknik/genel konular hakkında bana soru sorabilirsin. Sana nasıl yardımcı olabilirim?
+            </div>
+        </div>
+
+        <div class="p-3 bg-[#09090b] border-t border-cyan-800/50 flex gap-2">
+            <input type="text" id="chat-input" placeholder="Bir şeyler sor..." class="flex-1 bg-cyan-950/30 border border-cyan-800 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-cyan-400 focus:bg-cyan-950/50 transition" onkeypress="handleEnter(event)">
+            <button onclick="sendChatMessage()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 p-2.5 rounded-xl font-bold transition shadow-[0_0_15px_rgba(6,182,212,0.4)] flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <button onclick="toggleChat()" class="fixed bottom-6 right-6 w-14 h-14 bg-cyan-500 rounded-full flex items-center justify-center text-slate-950 shadow-[0_0_20px_rgba(6,182,212,0.6)] hover:scale-105 hover:bg-cyan-400 transition-all z-40 group">
+        <svg class="w-6 h-6 group-hover:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+        <svg class="w-6 h-6 hidden group-hover:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+    </button>
+
+    <script>
+        function showSection(sectionId) {
+            const homeSection = document.getElementById('home-section');
+            if (sectionId === 'home') {
+                homeSection.classList.remove('hidden');
+                homeSection.classList.add('flex');
+            } else {
+                homeSection.classList.add('hidden');
+                homeSection.classList.remove('flex');
+            }
+
+            const particles = document.querySelector('.particle-container');
+            if (particles) {
+                if (sectionId === 'yetenekler' || sectionId === 'deneyim') {
+                    particles.style.display = 'none';
+                } else {
+                    particles.style.display = 'block';
+                }
+            }
+
+            // 'kaynaklar' diziden çıkarıldı
+            const sections = ['hakkimda', 'yetenekler', 'projeler', 'bitirme', 'deneyim', 'sertifikalar', 'iletisim'];
+
+            sections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.add('hidden');
+                    el.classList.remove('flex');
+                }
+            });
+
+            if (sectionId !== 'home') {
+                const target = document.getElementById(sectionId);
+                if (target) {
+                    target.classList.remove('hidden');
+                    target.classList.add('flex');
+                }
+            }
+
+            const allNavLinks = document.querySelectorAll('.nav-link');
+            allNavLinks.forEach(link => link.classList.remove('active'));
+
+            if (sectionId !== 'home') {
+                const activeBtn = document.getElementById('nav-' + sectionId);
+                if(activeBtn) activeBtn.classList.add('active');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        let currentLang = 'tr';
+        function toggleLanguage() {
+            currentLang = currentLang === 'tr' ? 'en' : 'tr';
+
+            const slider = document.getElementById('lang-slider');
+            const textTr = document.getElementById('text-tr');
+            const textEn = document.getElementById('text-en');
+
+            if (currentLang === 'en') {
+                slider.style.transform = 'translateX(32px)';
+                textTr.classList.remove('text-cyan-50');
+                textTr.classList.add('text-slate-500');
+                textEn.classList.remove('text-slate-500');
+                textEn.classList.add('text-cyan-50');
+            } else {
+                slider.style.transform = 'translateX(0px)';
+                textEn.classList.remove('text-cyan-50');
+                textEn.classList.add('text-slate-500');
+                textTr.classList.remove('text-slate-500');
+                textTr.classList.add('text-cyan-50');
+            }
+
+            document.querySelectorAll('[data-tr]').forEach(el => {
+                el.innerHTML = el.getAttribute(`data-${currentLang}`);
+            });
+        }
+
+        async function sayfalariYukle() {
+            // 'kaynaklar' nesnesi bolumler dizisinden çıkarıldı
+            const bolumler = [
+                { id: 'hakkimda', dosya: 'Pages/About_Me.html' },
+                { id: 'yetenekler', dosya: 'Pages/Skills.html' },
+                { id: 'projeler', dosya: 'Pages/Projects.html' },
+                { id: 'bitirme', dosya: 'Pages/Graduation_Project.html' },
+                { id: 'deneyim', dosya: 'Pages/Experience.html' },
+                { id: 'sertifikalar', dosya: 'Pages/Certificates.html' },
+                { id: 'iletisim', dosya: 'Pages/Contact.html' }
+            ];
+
+            for (const bolum of bolumler) {
+                try {
+                    const response = await fetch(bolum.dosya);
+                    if (response.ok) {
+                        const htmlIcerik = await response.text();
+                        document.getElementById(bolum.id).innerHTML = htmlIcerik;
+                    }
+                } catch (error) {
+                    console.error(`${bolum.dosya} yüklenirken hata oluştu:`, error);
+                }
+            }
+
+            document.querySelectorAll('[data-tr]').forEach(el => {
+                el.innerHTML = el.getAttribute(`data-${currentLang}`);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', sayfalariYukle);
+
+        // API anahtarını güvenli config dosyasından çekiyoruz
+        const GEMINI_API_KEY = typeof CONFIG !== 'undefined' ? CONFIG.GEMINI_API_KEY : 'API_KEY_BULUNAMADI';
+        const chatModal = document.getElementById('ai-chat-modal');
+        const chatMessages = document.getElementById('chat-messages');
+        const chatInput = document.getElementById('chat-input');
+
+        function toggleChat() {
+            if (chatModal.classList.contains('hidden')) {
+                chatModal.classList.remove('hidden');
+                chatModal.classList.add('flex');
+                setTimeout(() => {
+                    chatModal.classList.remove('scale-95', 'opacity-0');
+                    chatModal.classList.add('scale-100', 'opacity-100');
+                    chatInput.focus();
+                }, 10);
+            } else {
+                chatModal.classList.remove('scale-100', 'opacity-100');
+                chatModal.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    chatModal.classList.add('hidden');
+                    chatModal.classList.remove('flex');
+                }, 300);
+            }
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter') sendChatMessage();
+        }
+
+        function appendMessage(text, sender, isLoading = false) {
+            const msgDiv = document.createElement('div');
+            const uniqueId = 'msg-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+            msgDiv.id = uniqueId;
+
+            if (sender === 'user') {
+                msgDiv.className = 'self-end max-w-[85%] bg-cyan-500 text-slate-950 p-3 rounded-2xl rounded-tr-sm mt-2';
+            } else {
+                msgDiv.className = 'self-start max-w-[85%] bg-cyan-900/40 border border-cyan-800/50 text-cyan-50 p-3 rounded-2xl rounded-tl-sm mt-2';
+            }
+
+            if (isLoading) {
+                msgDiv.innerHTML = '<span class="flex gap-1 items-center h-5"><span class="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce"></span><span class="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></span><span class="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span></span>';
+            } else {
+                msgDiv.innerText = text;
+            }
+
+            chatMessages.appendChild(msgDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return uniqueId;
+        }
+
+        function removeMessage(id) {
+            const msgDiv = document.getElementById(id);
+            if (msgDiv) {
+                msgDiv.remove();
+            }
+        }
+
+        async function sendChatMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            appendMessage(text, 'user');
+            chatInput.value = '';
+            const loadingId = appendMessage('', 'ai', true);
+
+            // Yapay zekaya (GunsaAI) verilen katı kimlik ve yetki sınırları
+            const systemPrompt = `
+            Senin adın GunsaAI. Sen Salih Gündüz'ün kişisel portfolyo asistanısın.
+
+            KİMLİK VE KURALLAR:
+            1. Eğer kullanıcı Salih Gündüz'ün kişisel özellikleri, psikolojik analizi, düşünce yapısı, siyasi/dini görüşleri veya özel hayatı hakkında sorular sorarsa KESİNLİKLE şu cevabı ver: "Güvenlik ve gizlilik politikaları gereği Salih Gündüz'ün kişisel analizleri veya özel düşünce yapısı hakkında bilgi veremem. Ancak size mühendislik projeleri, deneyimleri veya yetenekleri hakkında memnuniyetle yardımcı olabilirim."
+            2. Eğer kullanıcı şiir yazmak, matematik çözmek, kod yazdırmak veya genel mühendislik soruları sormak gibi genel zeka (LLM) görevleri verirse, bunları en iyi şekilde yanıtla.
+            3. Eğer kullanıcı Salih'in portfolyosu (Projeler, Yetenekler, CV) hakkında bir şey sorarsa aşağıdaki bilgileri kullanarak cevap ver. Cevaplarını sorulan dile göre (Türkçe sorana Türkçe, İngilizce sorana İngilizce) ver:
+
+            SALİH GÜNDÜZ VERİTABANI:
+            - Eğitim: İzmir Demokrasi Üniversitesi, Elektrik-Elektronik Mühendisliği 3. sınıf öğrencisi.
+            - Odak Alanları: Gömülü Sistemler, IoT, Yapay Zeka (Machine Learning), Veri Analizi, PCB Tasarımı, Kontrol Sistemleri.
+            - Yetenekler: Python, C++, Altium, SolidWorks, MATLAB, ROS2.
+            - Öne Çıkan Projeleri:
+              * İKA (Teknofest): NVIDIA Jetson ve Pixhawk ile Otonom İnsansız Kara Aracı tasarımı (LiDAR+Kamera Sensör Füzyonu).
+              * İHA (Teknofest): VTOL Ana İHA ve Decoy (Sahte) İHA konseptli elektronik harp aracı.
+              * Akıllı Sera: Arduino ve STM32 kullanılarak geliştirilen IoT tabanlı toprak nemi ve otomatik sulama sistemi.
+              * El Hareketi Kontrolü: Bilgisayarı kamerasından el hareketleriyle (Neural Network) kontrol etme sistemi.
+              * Bitirme Projesi: İHA'lar için görüntü işleme destekli ve ROS2/Gazebo simülasyonlu PID uçuş kontrolcü tasarımı.
+
+            Kullanıcının sorusu şu: "${text}"
+            `;
+
+            try {
+                if (GEMINI_API_KEY === 'API_KEY_BULUNAMADI') {
+                    throw new Error("Güvenli API anahtarı (config.js) bulunamadı! Lütfen geliştiriciyle iletişime geçin.");
+                }
+
+                // DİKKAT: Senin hesabında flash-1.5 modeli kapalı olduğu için bunu flash-3 ile güncelledim!
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: systemPrompt }]
+                        }]
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API Hatası: ${errorData.error?.message || "Bilinmeyen hata"}`);
+                }
+
+                const data = await response.json();
+                const aiResponse = data.candidates[0].content.parts[0].text;
+
+                removeMessage(loadingId);
+                appendMessage(aiResponse, 'ai');
+
+            } catch (error) {
+                console.error("Hata:", error);
+                removeMessage(loadingId);
+                appendMessage(`Sistemsel bir arıza oluştu: ${error.message}`, 'ai');
+            }
+
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: systemPrompt + text }]
+                        }]
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API Hatası: ${errorData.error?.message || "Bilinmeyen hata"}`);
+                }
+
+                const data = await response.json();
+                const aiResponse = data.candidates[0].content.parts[0].text;
+
+                removeMessage(loadingId);
+                appendMessage(aiResponse, 'ai');
+
+            } catch (error) {
+                console.error("Hata:", error);
+                removeMessage(loadingId);
+                appendMessage(`Bağlantı kurulamadı. Sebep: ${error.message}`, 'ai');
+            }
+        }
+
+        function openImageModal(src) {
+            const modal = document.getElementById('image-modal');
+            const modalImg = document.getElementById('modal-img');
+            modalImg.src = src;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalImg.classList.remove('scale-95');
+                modalImg.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('image-modal');
+            const modalImg = document.getElementById('modal-img');
+            modal.classList.add('opacity-0');
+            modalImg.classList.remove('scale-100');
+            modalImg.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                modalImg.src = '';
+            }, 300);
+        }
+
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('image-modal');
+            if (modal && !modal.classList.contains('hidden') && e.target === modal) {
+                closeImageModal();
+            }
+        });
+
+        // ==========================================
+        // PROJE DETAY MODAL (PANEL) İŞLEMLERİ
+        // ==========================================
+        window.openProjectDetailModal = function(titleId, descId) {
+            const modal = document.getElementById('project-detail-modal');
+            const titleEl = document.getElementById(titleId);
+            const descEl = document.getElementById(descId);
+
+            if (!modal || !titleEl || !descEl) {
+                console.error("Panel bulunamadı!");
+                return;
+            }
+
+            // KESİN ÇÖZÜM BURADA: Modalı uzun sayfanın içinden çıkarıp doğrudan gövdeye (body) ekliyoruz.
+            // Bu sayede sayfanın neresinde olursan ol, panel TAM BASTIĞIN YERDE (Gözünün önünde) açılır!
+            document.body.appendChild(modal);
+
+            // Metinleri ve dilleri panele aktar
+            const modalTitle = document.getElementById('modal-project-title');
+            const modalDesc = document.getElementById('modal-project-content');
+            const lang = (typeof currentLang !== 'undefined') ? currentLang : 'tr';
+
+            modalTitle.innerHTML = titleEl.getAttribute(`data-${lang}`) || titleEl.innerHTML;
+            modalDesc.innerHTML = descEl.getAttribute(`data-${lang}`) || descEl.innerHTML;
+
+            // Paneli görünür yap
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            // Kullanıcının kafası karışmasın diye arkadaki sayfanın kaymasını KİLİTLE
+            document.body.style.overflow = 'hidden';
+
+            // Animasyonla buğulu şekilde ekrana getir
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+            }, 10);
+        };
+
+        window.closeProjectDetailModal = function() {
+            const modal = document.getElementById('project-detail-modal');
+            if (!modal) return;
+
+            modal.classList.add('opacity-0');
+
+            // Arka plandaki sayfa kaydırma kilidini AÇ (Normale dön)
+            document.body.style.overflow = 'auto';
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        };
+
+        // Arka plandaki buğulu siyah boşluğa tıklandığında da paneli kapat
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('project-detail-modal');
+            if (modal && !modal.classList.contains('hidden') && e.target === modal) {
+                window.closeProjectDetailModal();
+            }
+        });
+
+        function handleGalleryClick(element) {
+            if (element.classList.contains('active-center')) {
+                // Resim ortadaysa tek tıkla modal'ı (büyütme ekranını) aç
+                const imgSrc = element.querySelector('img').src;
+                openImageModal(imgSrc);
+            } else {
+                // Resim yandaysa merkeze kaydır
+                element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+        }
+
+        function updateCenterImage(container) {
+            if(!container) return;
+            const containerCenter = container.getBoundingClientRect().left + container.clientWidth / 2;
+            let closestItem = null;
+            let minDistance = Infinity;
+
+            const items = container.querySelectorAll('.gallery-item');
+            items.forEach(item => {
+                const itemCenter = item.getBoundingClientRect().left + item.clientWidth / 2;
+                const distance = Math.abs(containerCenter - itemCenter);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestItem = item;
+                }
+            });
+
+            items.forEach(item => {
+                if (item === closestItem) {
+                    item.classList.add('active-center');
+                    item.classList.remove('blurred-item');
+                } else {
+                    item.classList.remove('active-center');
+                    item.classList.add('blurred-item');
+                }
+            });
+        }
+
+        const galleryObserver = new MutationObserver((mutations) => {
+            const galleries = document.querySelectorAll('.gallery-container:not(.observed)');
+            galleries.forEach(container => {
+                container.classList.add('observed');
+                setTimeout(() => updateCenterImage(container), 100);
+                container.addEventListener('scroll', () => updateCenterImage(container));
+            });
+        });
+        galleryObserver.observe(document.body, { childList: true, subtree: true });
+
+    </script>
+</body>
+</html>
+

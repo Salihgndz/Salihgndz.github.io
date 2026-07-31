@@ -1,0 +1,443 @@
+<!-- ANA KAPSAYICI (Arka planı sınırlandırmak ve içerikle katmanlamak için) -->
+<div class="relative w-full h-full min-h-[100vh] overflow-hidden">
+
+    <!-- ========================================== -->
+    <!-- ÖZEL ARKA PLAN SİMÜLASYONLARI (z-0)        -->
+    <!-- ========================================== -->
+    <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none opacity-40">
+
+        <!-- 1. KAAN JET (2 Farklı Rota, Daha Çok Uçak) -->
+        <div class="absolute flex items-center jet-route-1">
+            <div class="w-20 h-3 bg-gradient-to-l from-orange-500 via-red-600 to-transparent blur-[3px] rounded-full animate-pulse -mr-6 z-0"></div>
+            <img src="jpegs/kaan.png" alt="Kaan Jet" class="w-40 md:w-56 h-auto z-10 drop-shadow-[0_0_15px_rgba(255,100,0,0.6)]">
+        </div>
+        <div class="absolute flex items-center jet-route-2">
+            <div class="w-16 h-2 bg-gradient-to-l from-orange-500 via-red-600 to-transparent blur-[2px] rounded-full animate-pulse -mr-4 z-0"></div>
+            <img src="jpegs/kaan.png" alt="Kaan Jet" class="w-28 md:w-40 h-auto z-10 drop-shadow-[0_0_15px_rgba(255,100,0,0.4)]">
+        </div>
+        <div class="absolute flex items-center jet-route-3">
+            <div class="w-24 h-3 bg-gradient-to-l from-orange-500 via-red-600 to-transparent blur-[3px] rounded-full animate-pulse -mr-6 z-0"></div>
+            <img src="jpegs/kaan.png" alt="Kaan Jet" class="w-48 md:w-64 h-auto z-10 drop-shadow-[0_0_15px_rgba(255,100,0,0.6)]">
+        </div>
+
+        <!-- 2. B2 BOMBARDIMAN UÇAĞI VE BOMBALAR -->
+        <div class="absolute flex flex-col items-center b2-anim">
+            <img src="jpegs/b2.png" alt="B2 Bomber" class="w-56 md:w-80 h-auto z-20 drop-shadow-2xl">
+            <!-- Bombalar -->
+            <div class="flex gap-4 mt-2">
+                <div class="b2-bomb bomb-delay-1"></div>
+                <div class="b2-bomb bomb-delay-2"></div>
+                <div class="b2-bomb bomb-delay-3"></div>
+                <div class="b2-bomb bomb-delay-4"></div>
+            </div>
+        </div>
+
+        <!-- 3. LEOPARD TANK (2 Kere Atış Yapar ve Kaybolur) -->
+        <!-- Sol Tank -->
+        <div class="absolute bottom-[8%] left-0 flex items-center tank-left-anim">
+            <img src="jpegs/leopard.png" alt="Leopard Tank" class="w-56 md:w-72 h-auto drop-shadow-2xl z-10">
+            <div class="relative">
+                <div class="muzzle-flash-left-1 absolute -left-6 -top-4 w-12 h-12 bg-yellow-400 rounded-full blur-[6px]"></div>
+                <div class="tank-shell-left-1 absolute -left-2 top-0 w-10 h-2 bg-yellow-100 shadow-[0_0_15px_#f97316] rounded-full flex items-center"><div class="w-20 h-2 bg-gradient-to-l from-orange-500 to-transparent blur-[1px] -ml-16"></div></div>
+
+                <div class="muzzle-flash-left-2 absolute -left-6 -top-4 w-12 h-12 bg-yellow-400 rounded-full blur-[6px]"></div>
+                <div class="tank-shell-left-2 absolute -left-2 top-0 w-10 h-2 bg-yellow-100 shadow-[0_0_15px_#f97316] rounded-full flex items-center"><div class="w-20 h-2 bg-gradient-to-l from-orange-500 to-transparent blur-[1px] -ml-16"></div></div>
+            </div>
+        </div>
+
+        <!-- Sağ Tank -->
+        <div class="absolute bottom-[15%] right-0 flex items-center flex-row-reverse tank-right-anim">
+            <img src="jpegs/leopard.png" alt="Leopard Tank" class="w-56 md:w-72 h-auto drop-shadow-2xl z-10" style="transform: scaleX(-1);">
+            <div class="relative">
+                <div class="muzzle-flash-right-1 absolute -right-6 -top-4 w-12 h-12 bg-yellow-400 rounded-full blur-[6px]"></div>
+                <div class="tank-shell-right-1 absolute -right-2 top-0 w-10 h-2 bg-yellow-100 shadow-[0_0_15px_#f97316] rounded-full flex items-center flex-row-reverse"><div class="w-20 h-2 bg-gradient-to-r from-orange-500 to-transparent blur-[1px] -mr-16"></div></div>
+
+                <div class="muzzle-flash-right-2 absolute -right-6 -top-4 w-12 h-12 bg-yellow-400 rounded-full blur-[6px]"></div>
+                <div class="tank-shell-right-2 absolute -right-2 top-0 w-10 h-2 bg-yellow-100 shadow-[0_0_15px_#f97316] rounded-full flex items-center flex-row-reverse"><div class="w-20 h-2 bg-gradient-to-r from-orange-500 to-transparent blur-[1px] -mr-16"></div></div>
+            </div>
+        </div>
+
+        <!-- 4. HAVA SAVUNMA SİSTEMİ (Sayfanın Sadece En Altında) -->
+        <div class="absolute bottom-0 left-0 w-full h-80 z-20">
+            <!-- Hava Savunma Bataryası -->
+            <img src="jpegs/savunma.png" alt="Air Defense" class="absolute bottom-0 right-[2%] w-48 md:w-72 drop-shadow-xl z-20 opacity-80">
+            <!-- Hedef Uçak (Sayfanın altından geçer) -->
+            <img src="jpegs/kaan.png" alt="Target Plane" class="absolute top-10 left-0 w-24 md:w-32 target-plane-anim z-10">
+
+            <!-- Atılan Füze -->
+            <div class="sam-missile absolute bottom-12 right-[8%] w-2 h-10 bg-slate-200 shadow-[0_0_10px_#fff] rounded-full flex flex-col items-center">
+                <div class="w-4 h-16 bg-gradient-to-b from-orange-500 to-transparent blur-[2px] mt-8"></div>
+            </div>
+
+            <!-- Patlama Efekti -->
+            <div class="sam-explosion absolute top-10 left-[45%] w-40 h-40 bg-gradient-to-r from-orange-500 via-red-600 to-yellow-400 blur-xl rounded-full mix-blend-screen"></div>
+        </div>
+    </div>
+    <!-- ARKA PLAN BİTİŞİ -->
+
+
+    <!-- ========================================== -->
+    <!-- MEVCUT İÇERİKLER VE DİL DESTEĞİ (z-10)     -->
+    <!-- ========================================== -->
+    <div class="relative z-10 w-full max-w-4xl mx-auto text-left py-4 animate-fadeIn">
+
+        <!-- Ana Dikey Çizgi (About_Me ile aynı tema, Mor'dan Cyan'a geçiş) -->
+        <div class="absolute left-0 top-2 bottom-0 w-[2px] bg-gradient-to-b from-purple-500 via-cyan-400 to-transparent opacity-60"></div>
+
+        <!-- 1. LİSANS ZORUNLU STAJ -->
+        <div class="relative pl-10 mb-16">
+            <div class="absolute -left-[5px] top-2 w-3 h-3 rounded-full bg-purple-500 shadow-[0_0_12px_rgba(168,85,247,0.9)] ring-4 ring-[#050505]"></div>
+
+            <div class="flex items-center gap-3 mb-6">
+                <svg class="w-7 h-7 text-purple-400 drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13V6a2 2 0 00-2-2h-4a2 2 0 00-2-2H9a2 2 0 00-2 2H3a2 2 0 00-2 2v7m18 0v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5m18 0H3"></path>
+                </svg>
+                <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight">
+                    <span data-tr="LİSANS ZORUNLU STAJ" data-en="MANDATORY INTERNSHIP">LİSANS ZORUNLU STAJ</span>
+                </h2>
+            </div>
+
+            <div class="w-full bg-purple-900/20 border border-purple-800/50 backdrop-blur-md rounded-xl p-6 hover:border-purple-400/50 transition-all duration-300 shadow-lg mb-6">
+                <div class="flex items-center gap-4 mb-4">
+                    <img src="jpegs/zorunlu_staj_logo_1.png" alt="Zorunlu Staj Firma 1" class="h-14 w-auto object-contain bg-white/5 p-1.5 rounded-lg border border-purple-500/30">
+                    <div>
+                        <h3 class="text-xl font-bold text-purple-50" data-tr="Türk Havacılık ve Uzay Sanayii A.Ş. (TUSAŞ)" data-en="Turkish Aerospace Industries, Inc. (TUSAS)">Türk Havacılık ve Uzay Sanayii A.Ş. (TUSAŞ)</h3>
+                        <span class="text-sm text-purple-400 font-medium" data-tr="İnsansız Hava Araçları Aviyonik Sistemler Müdürlüğü" data-en="Unmanned Aerial Vehicles Avionics Systems Directorate">İnsansız Hava Araçları Aviyonik Sistemler Müdürlüğü</span>
+                    </div>
+                </div>
+                <p class="text-slate-300 leading-relaxed text-sm text-justify" data-tr="Stajım boyunca insansız hava araçları platformlarında gözlem yapabilme ve proje geliştirme deneyimi sağladım." data-en="During my internship, I gained experience in observing and developing projects on unmanned aerial vehicle platforms.">
+                    Stajım boyunca insansız hava araçları platformlarında gözlem yapabilme ve proje geliştirme deneyimi sağladım.
+                </p>
+            </div>
+
+            <div class="w-full bg-purple-900/20 border border-purple-800/50 backdrop-blur-md rounded-xl p-6 hover:border-purple-400/50 transition-all duration-300 shadow-lg">
+                <div class="flex items-center gap-4 mb-4">
+                    <img src="jpegs/zorunlu_staj_logo_2.png" alt="Zorunlu Staj Firma 2" class="h-14 w-auto object-contain bg-white/5 p-1.5 rounded-lg border border-purple-500/30">
+                    <div>
+                        <h3 class="text-xl font-bold text-purple-50" data-tr="BMC Otomotiv Sanayii ve Ticaret A.Ş." data-en="BMC Automotive Industry and Trade Inc.">BMC Otomotiv Sanayii ve Ticaret A.Ş.</h3>
+                        <span class="text-sm text-purple-400 font-medium" data-tr="Entegrasyon Kalite ve Test/Teslimat Müdürlüğü" data-en="Integration Quality and Test/Delivery Directorate">Entegrasyon Kalite ve Test/Teslimat Müdürlüğü </span>
+                    </div>
+                </div>
+                <p class="text-slate-300 leading-relaxed text-sm text-justify" data-tr="Tank sistemleri üzerinde çalışmaları gözlemleyebilme fırsatı yakalayarak kalite kontrol süreçlerinin işleyişini deneyimleme fırsatı yakaladım." data-en="I had the opportunity to observe works on tank systems and experience the operation of quality control processes.">
+                    Tank sistemleri üzerinde çalışmaları gözlemleyebilme fırsatı yakalayarak kalite kontrol süreçlerinin işleyişini deneyimleme fırsatı yakaladım.
+                </p>
+            </div>
+        </div>
+
+        <!-- 2. GÖNÜLLÜ STAJ -->
+        <div class="relative pl-10 mb-16">
+            <div class="absolute -left-[5px] top-2 w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.9)] ring-4 ring-[#050505]"></div>
+
+            <div class="flex items-center gap-3 mb-6">
+                <svg class="w-7 h-7 text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                </svg>
+                <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight">
+                    <span data-tr="GÖNÜLLÜ STAJ" data-en="VOLUNTARY INTERNSHIP">GÖNÜLLÜ STAJ</span>
+                </h2>
+            </div>
+
+            <div class="w-full bg-cyan-900/20 border border-cyan-800/50 backdrop-blur-md rounded-xl p-6 hover:border-cyan-400/50 transition-all duration-300 shadow-lg mb-6">
+                <div class="flex items-center gap-4 mb-4">
+                    <img src="jpegs/gonullu_staj_logo_1.png" alt="Gönüllü Staj Firma 1" class="h-14 w-auto object-contain bg-white/5 p-1.5 rounded-lg border border-cyan-500/30">
+                    <div>
+                        <h3 class="text-xl font-bold text-cyan-50" data-tr="IMDS" data-en="IMDS">IMDS</h3>
+                        <span class="text-sm text-cyan-400 font-medium" data-tr="Seri Üretim ve AR-GE Stajyeri" data-en="Mass Production and R&D Intern">Seri Üretim ve AR-GE Stajyeri</span>
+                    </div>
+                </div>
+                <p class="text-slate-300 leading-relaxed text-sm text-justify" data-tr="Elektrikli şömine kartlarının tasarımı, üretimi, test ve kalite kontrol aşamalarında aktif görev aldım. Ayrıca PIC programlama hakkında gözlem yapma fırsatı yakaladım." data-en="I took an active role in the design, production, testing, and quality control stages of electric fireplace boards. I also had the opportunity to observe PIC programming.">
+                    Elektrikli şömine kartlarının tasarımı, üretimi, test ve kalite kontrol aşamalarında aktif görev aldım. Ayrıca PIC programlama hakkında gözlem yapma fırsatı yakaladım.
+                </p>
+            </div>
+
+            <div class="w-full bg-cyan-900/20 border border-cyan-800/50 backdrop-blur-md rounded-xl p-6 hover:border-cyan-400/50 transition-all duration-300 shadow-lg">
+                <div class="flex items-center gap-4 mb-4">
+                    <img src="jpegs/gonullu_staj_logo_2.png" alt="Gönüllü Staj Firma 2" class="h-14 w-auto object-contain bg-white/5 p-1.5 rounded-lg border border-cyan-500/30">
+                    <div>
+                        <h3 class="text-xl font-bold text-cyan-50" data-tr="Ümit Maker" data-en="Ümit Maker">Ümit Maker</h3>
+                        <span class="text-sm text-cyan-400 font-medium" data-tr="Seri Üretm Stajyeri" data-en="Mass Production Intern">Seri Üretm Stajyeri</span>
+                    </div>
+                </div>
+                <p class="text-slate-300 leading-relaxed text-sm text-justify" data-tr="BMS devrelerinin dizaynı, Li-Po batarya dizaynı, entegrasyon ve test aşamalarını gözlemleme fırsatı yakaladım. Ayrıca seri üretim departmanında aktif görev alarak; Li-Po pil puntolama (s ve p dizaynına göre), BMS devre lehimlemes, batarya su geçirmez plastik kaplama yapımı aşamalarında aktif olarak çalıştım." data-en="I had the opportunity to observe the design of BMS circuits, Li-Po battery design, integration, and testing stages. Additionally, working actively in the mass production department; I actively worked in the stages of Li-Po battery spot welding, BMS circuit soldering, and battery waterproof plastic coating.">
+                    BMS devrelerinin dizaynı, Li-Po batarya dizaynı, entegrasyon ve test aşamalarını gözlemleme fırsatı yakaladım. Ayrıca seri üretim departmanında aktif görev alarak; Li-Po pil puntolama (s ve p dizaynına göre), BMS devre lehimlemes, batarya su geçirmez plastik kaplama yapımı aşamalarında aktif olarak çalıştım.
+                </p>
+            </div>
+        </div>
+
+        <!-- 3. MÜHENDİSLİK KULÜPLERİ -->
+        <div class="relative pl-10 mb-16">
+            <div class="absolute -left-[5px] top-2 w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.9)] ring-4 ring-[#050505]"></div>
+
+            <div class="flex items-center gap-3 mb-6">
+                <svg class="w-7 h-7 text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight">
+                    <span data-tr="MÜHENDİSLİK KULÜPLERİ" data-en="ENGINEERING CLUBS">MÜHENDİSLİK KULÜPLERİ</span>
+                </h2>
+            </div>
+
+            <div class="w-full bg-cyan-900/20 border border-cyan-800/50 backdrop-blur-md rounded-xl p-6 hover:border-cyan-400/50 transition-all duration-300 shadow-lg mb-6">
+                <div class="flex items-center gap-4 mb-4">
+                    <img src="jpegs/kulup_logo_1.png" alt="Kulüp Logosu 1" class="h-14 w-auto object-contain bg-white/5 p-1.5 rounded-lg border border-cyan-500/30">
+                    <div>
+                        <h3 class="text-xl font-bold text-cyan-50" data-tr="İzmir Demokrasi Üniversitesi CIGRE NGN Mühendislik Kulübü" data-en="Izmir Democracy University CIGRE NGN Engineering Club">İzmir Demokrasi Üniversitesi CIGRE NGN Mühendislik Kulübü</h3>
+                        <span class="text-sm text-cyan-400 font-medium" data-tr="Yönetim Kurulu Üyesi / " data-en="Board Member / ">Yönetim Kurulu Üyesi / </span>
+                        <span class="text-sm text-cyan-400 font-medium" data-tr="Tasarım Komitesi Başkanı / Etkinlik ve Teknik Gezi Organizatörü " data-en="Design Committee Chairman / Event and Technical Trip Organizer">Tasarım Komitesi Başkanı / Etkinlik ve Teknik Gezi Organizatörü </span>
+                    </div>
+                </div>
+                <p class="text-slate-300 leading-relaxed text-sm text-justify" data-tr="Ekim 2024 tarihinde mühendislik kulübünün yönetim kurulu üyesi olarak kabul aldım. Ekim 2024 - Eylül 2025 tarihleri arasında kulübün Tasarım Komitesi Başkanlığını yürüttüm. Eylül 2025 - Mayıs 2026 tarihleri arasında kulübün Etkinlik ve Teknik Gezi Organizatörlüğünü yürüttüm. Bu süreçte etkinlikler, teknik geziler ve daha birçok etkinlik düzenleyerek mühendislik öğrencilerinin multidisipliner olarak biribri ve profosyonel sektör ile bağ kurmasına vesile olduk." data-en="In October 2024, I was accepted as a board member of the engineering club. Between October 2024 and September 2025, I served as the Chairman of the Design Committee. Between September 2025 and May 2026, I served as the Event and Technical Trip Organizer. In this process, by organizing technical trips and many other activities, we helped engineering students connect with each other and the professional sector multidisciplinary.">
+                    Ekim 2024 tarihinde mühendislik kulübünün yönetim kurulu üyesi olarak kabul aldım.
+                    Ekim 2024 - Eylül 2025 tarihleri arasında kulübün Tasarım Komitesi Başkanlığını yürüttüm.
+                    Eylül 2025 - Mayıs 2026 tarihleri arasında kulübün Etkinlik ve Teknik Gezi Organizatörlüğünü yürüttüm.
+                    Bu süreçte etkinlikler, teknik geziler ve daha birçok etkinlik düzenleyerek mühendislik öğrencilerinin multidisipliner olarak biribri ve profosyonel sektör ile bağ kurmasına vesile olduk.
+                </p>
+            </div>
+
+            <div class="w-full bg-cyan-900/20 border border-cyan-800/50 backdrop-blur-md rounded-xl p-6 hover:border-cyan-400/50 transition-all duration-300 shadow-lg mb-6">
+                <div class="flex items-center gap-4 mb-4">
+                    <img src="jpegs/kulup_logo_2.png" alt="Kulüp Logosu 2" class="h-14 w-auto object-contain bg-white/5 p-1.5 rounded-lg border border-cyan-500/30">
+                    <div>
+                        <h3 class="text-xl font-bold text-cyan-50" data-tr="İzmir Demokrasi Üniversitesi Google Developer Studient Club Mühendislik Kulübü" data-en="Izmir Democracy University Google Developer Student Club Engineering Club">İzmir Demokrasi Üniversitesi Google Developer Studient Club Mühendislik Kulübü</h3>
+                        <span class="text-sm text-cyan-400 font-medium" data-tr="Yönetim Kurulu Üyesi / Kulüp Ideathon Takım Üyesi" data-en="Board Member / Club Ideathon Team Member">Yönetim Kurulu Üyesi / Kulüp Ideathon Takım Üyesi</span>
+                    </div>
+                </div>
+                <p class="text-slate-300 leading-relaxed text-sm text-justify" data-tr="Lisans eğitimimi aldığım okulumda Google destekli bu kulübün kurucu ekibinde yer aldım. Ekim 2022 - Mayıs 2024 tarihleri arasında ekibimizle ekinlikler düzenleyerek öğrencilerin ve global dev şirketlerin bir araya gelmelerini sağladık. Ayrıca Google destekli online yazılım eğitimleimiz, Ideathon ve Heckathon yarışmalarımız ile öğretici zamanlar geçirdik." data-en="I was in the founding team of this Google-supported club at my university. Between October 2022 and May 2024, we organized events with our team to bring students and global giant companies together. We also spent educational times with our Google-supported online software trainings, Ideathon, and Hackathon competitions.">
+                    Lisans eğitimimi aldığım okulumda Google destekli bu kulübün kurucu ekibinde yer aldım. Ekim 2022 - Mayıs 2024 tarihleri arasında ekibimizle ekinlikler düzenleyerek öğrencilerin ve global dev şirketlerin bir araya gelmelerini sağladık. Ayrıca Google destekli online yazılım eğitimleimiz, Ideathon ve Heckathon yarışmalarımız ile öğretici zamanlar geçirdik.
+                </p>
+            </div>
+
+            <div class="w-full bg-cyan-900/20 border border-cyan-800/50 backdrop-blur-md rounded-xl p-6 hover:border-cyan-400/50 transition-all duration-300 shadow-lg">
+                <div class="flex items-center gap-4 mb-4">
+                    <img src="jpegs/kulup_logo_3.png" alt="Kulüp Logosu 3" class="h-14 w-auto object-contain bg-white/5 p-1.5 rounded-lg border border-cyan-500/30">
+                    <div>
+                        <h3 class="text-xl font-bold text-cyan-50" data-tr="İzmir Demokrasi Üniversitesi Robotik Topluluğu" data-en="Izmir Democracy University Robotics Society">İzmir Demokrasi Üniversitesi Robotik Topluluğu</h3>
+                        <span class="text-sm text-cyan-400 font-medium" data-tr="Üye" data-en="Member">Üye</span>
+                    </div>
+                </div>
+                <p class="text-slate-300 leading-relaxed text-sm text-justify" data-tr="Ocak 2025 tarihine kulüp üyesi olarak katıldığım bu kulüp ve yönetim kurulunda bulunuğum CIGRE kulübü iştirakı ile ortak etkinlikler düzenledik." data-en="I joined this club as a member in January 2025, and we organized joint events with the CIGRE club, where I am on the board of directors.">
+                    Ocak 2025 tarihine kulüp üyesi olarak katıldığım bu kulüp ve yönetim kurulunda bulunuğum CIGRE kulübü iştirakı ile ortak etkinlikler düzenledik.
+                </p>
+            </div>
+        </div>
+
+        <!-- 4. ÜYE OLUNAN DİĞER KULÜPLER -->
+        <div class="relative pl-10 pb-4">
+            <div class="absolute -left-[5px] top-2 w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.9)] ring-4 ring-[#050505]"></div>
+
+            <div class="flex items-center gap-3 mb-6">
+                <svg class="w-7 h-7 text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                </svg>
+                <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight">
+                    <span data-tr="ÜYE OLUNAN DİĞER KULÜPLER" data-en="OTHER CLUB MEMBERSHIPS">ÜYE OLUNAN DİĞER KULÜPLER</span>
+                </h2>
+            </div>
+
+            <div class="w-full bg-cyan-900/20 border border-cyan-800/50 backdrop-blur-md rounded-xl p-6 hover:border-cyan-400/50 transition-all duration-300 shadow-lg mb-6">
+                <div class="flex items-center gap-4 mb-4">
+                    <img src="jpegs/diger_kulup_logo_1.png" alt="Diğer Kulüp Logosu 1" class="h-14 w-auto object-contain bg-white/5 p-1.5 rounded-lg border border-cyan-500/30">
+                    <div>
+                        <h3 class="text-xl font-bold text-cyan-50" data-tr="İzmir Demokrasi Üniversitesi IEEE Mühendislik Kulübü" data-en="Izmir Democracy University IEEE Engineering Club">İzmir Demokrasi Üniversitesi IEEE Mühendislik Kulübü</h3>
+                        <span class="text-sm text-cyan-400 font-medium" data-tr="Üye" data-en="Member">Üye</span>
+                    </div>
+                </div>
+                <p class="text-slate-300 leading-relaxed text-sm text-justify" data-tr="Elektrik Elektronik Mühendisliği öğrencisi olarak alanımda global ve çoğu universite topluluklarında olan okulum IEEE mühendislik kulübünün çalışamlarını, etkinliklerini, yayınlrını takip etme fırsatı yakaladım." data-en="As an Electrical and Electronics Engineering student, I had the opportunity to follow the work, events, and publications of my school's IEEE engineering club, which is global and present in most university communities in my field.">
+                    Elektrik Elektronik Mühendisliği öğrencisi olarak alanımda global ve çoğu universite topluluklarında olan okulum IEEE mühendislik kulübünün çalışamlarını, etkinliklerini, yayınlrını takip etme fırsatı yakaladım.
+                </p>
+            </div>
+
+            <div class="w-full bg-cyan-900/20 border border-cyan-800/50 backdrop-blur-md rounded-xl p-6 hover:border-cyan-400/50 transition-all duration-300 shadow-lg mb-6">
+                <div class="flex items-center gap-4 mb-4">
+                    <img src="jpegs/diger_kulup_logo_2.png" alt="Diğer Kulüp Logosu 2" class="h-14 w-auto object-contain bg-white/5 p-1.5 rounded-lg border border-cyan-500/30">
+                    <div>
+                        <h3 class="text-xl font-bold text-cyan-50" data-tr="İzmir Genç MMG" data-en="Izmir Young MMG">İzmir Genç MMG</h3>
+                        <span class="text-sm text-cyan-400 font-medium" data-tr="Üye" data-en="Member">Üye</span>
+                    </div>
+                </div>
+                <p class="text-slate-300 leading-relaxed text-sm text-justify" data-tr="İzmirde şubesi bulunan, Mimar ve Mühendisler Grubu ile TUSAŞ, BMC gibi savunma sanayii devlerinin teknik gezilerine katılma fırsatı buldum." data-en="I had the opportunity to participate in the technical trips of defense industry giants such as TUSAS and BMC with the Architects and Engineers Group, which has a branch in Izmir.">
+                    İzmirde şubesi bulunan, Mimar ve Mühendisler Grubu ile TUSAŞ, BMC gibi savunma sanayii devlerinin teknik gezilerine katılma fırsatı buldum.
+                </p>
+            </div>
+
+            <div class="w-full bg-cyan-900/20 border border-cyan-800/50 backdrop-blur-md rounded-xl p-6 hover:border-cyan-400/50 transition-all duration-300 shadow-lg mb-6">
+                <div class="flex items-center gap-4 mb-4">
+                    <img src="jpegs/diger_kulup_logo_3.png" alt="Diğer Kulüp Logosu 3" class="h-14 w-auto object-contain bg-white/5 p-1.5 rounded-lg border border-cyan-500/30">
+                    <div>
+                        <h3 class="text-xl font-bold text-cyan-50" data-tr="Yedi Hilal Teknoloji Geliştirme" data-en="Yedi Hilal Technology Development">Yedi Hilal Teknoloji Geliştirme</h3>
+                        <span class="text-sm text-cyan-400 font-medium" data-tr="Üye" data-en="Member">Üye</span>
+                    </div>
+                </div>
+                <p class="text-slate-300 leading-relaxed text-sm text-justify" data-tr="Kuruluş içi üyelerin oluşturduğu mühendis ekiplerinden Teknofest yarışma birincileri ile söyleşi yapma fırsatı buldum. Ayrıca kitap okuma ve tahliller, şiir günleri ile edebi anlamda kendime katkı sunma fırsatı yakaladım." data-en="I had the opportunity to interview Teknofest competition winners from the engineer teams formed by internal members. I also had the opportunity to contribute to myself in a literary sense with book readings, analysis, and poetry days.">
+                    Kuruluş içi üyelerin oluşturduğu mühendis ekiplerinden Teknofest yarışma birincileri ile söyleşi yapma fırsatı buldum. Ayrıca kitap okuma ve tahliller, şiir günleri ile edebi anlamda kendime katkı sunma fırsatı yakaladım.
+                </p>
+            </div>
+
+            <div class="w-full bg-cyan-900/20 border border-cyan-800/50 backdrop-blur-md rounded-xl p-6 hover:border-cyan-400/50 transition-all duration-300 shadow-lg">
+                <div class="flex items-center gap-4 mb-4">
+                    <img src="jpegs/diger_kulup_logo_4.png" alt="Diğer Kulüp Logosu 4" class="h-14 w-auto object-contain bg-white/5 p-1.5 rounded-lg border border-cyan-500/30">
+                    <div>
+                        <h3 class="text-xl font-bold text-cyan-50" data-tr="İzmir Demokrasi Üniversitesi Sualtı Topluluğu" data-en="Izmir Democracy University Underwater Society">İzmir Demokrasi Üniversitesi Sualtı Topluluğu</h3>
+                        <span class="text-sm text-cyan-400 font-medium" data-tr="Üye" data-en="Member">Üye</span>
+                    </div>
+                </div>
+                <p class="text-slate-300 leading-relaxed text-sm text-justify" data-tr="Sportif etkinlikler ile uğraşma imkanı sağladım. Arkadaşlarımızla İzmir / Foça'da tüplü dalış eğitimi sonrasında dalış deneyimi kazandım. Ayrıca toplu yüzme etkinlikleri ile akademik hayatımda sportif yanımın körelmesini engelledim." data-en="I had the opportunity to engage in sporting activities. I gained diving experience after scuba diving training with friends in Izmir / Foça. In addition, I prevented my sportive side from blunting in my academic life with collective swimming events.">
+                    Sportif etkinlikler ile uğraşma imkanı sağladım. Arkadaşlarımızla İzmir / Foça'da tüplü dalış eğitimi sonrasında dalış deneyimi kazandım. Ayrıca toplu yüzme etkinlikleri ile akademik hayatımda sportif yanımın körelmesini engelledim.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- SAVAŞ ARAÇLARI CSS ANİMASYONLARI           -->
+<!-- ========================================== -->
+<style>
+    /* 1. KAAN JET ANİMASYONLARI */
+    @keyframes flyRoute1 {
+        0% { transform: translate(-20vw, 80vh) rotate(-15deg); opacity: 0; }
+        10% { opacity: 0.8; }
+        40% { transform: translate(120vw, -20vh) rotate(-15deg); opacity: 0.8; }
+        41%, 100% { transform: translate(120vw, -20vh); opacity: 0; }
+    }
+    @keyframes flyRoute2 {
+        0%, 30% { transform: translate(-20vw, 10vh) rotate(5deg); opacity: 0; }
+        40% { opacity: 0.6; }
+        70% { transform: translate(120vw, 40vh) rotate(5deg); opacity: 0.6; }
+        71%, 100% { transform: translate(120vw, 40vh); opacity: 0; }
+    }
+    @keyframes flyRoute3 {
+        0%, 60% { transform: translate(120vw, 30vh) scaleX(-1); opacity: 0; }
+        70% { opacity: 0.7; }
+        95% { transform: translate(-30vw, 10vh) scaleX(-1); opacity: 0.7; }
+        96%, 100% { transform: translate(-30vw, 10vh) scaleX(-1); opacity: 0; }
+    }
+
+    .jet-route-1 { animation: flyRoute1 25s linear infinite; animation-fill-mode: both; }
+    .jet-route-2 { animation: flyRoute2 28s linear infinite; animation-fill-mode: both; }
+    .jet-route-3 { animation: flyRoute3 32s linear infinite; animation-fill-mode: both; }
+
+    /* 2. B2 BOMBARDIMAN ANİMASYONLARI */
+    @keyframes flyB2 {
+        0%, 15% { transform: translate(-30vw, 15vh); opacity: 0; }
+        25% { opacity: 0.9; }
+        75% { transform: translate(120vw, 15vh); opacity: 0.9; }
+        85%, 100% { transform: translate(120vw, 15vh); opacity: 0; }
+    }
+    .b2-anim { animation: flyB2 35s linear infinite; animation-fill-mode: both; }
+
+    @keyframes dropBomb {
+        0%, 45% { transform: translateY(0) scale(1); opacity: 0; background: #fb923c; }
+        46% { transform: translateY(0) scale(1); opacity: 1; }
+        49% { transform: translateY(20vh) scale(1.5); opacity: 1; background: #fb923c; }
+        50% { transform: translateY(22vh) scale(6); opacity: 0.8; background: #ef4444; } /* Patlama */
+        52%, 100% { transform: translateY(22vh) scale(8); opacity: 0; }
+    }
+    .b2-bomb { width: 10px; height: 16px; border-radius: 50%; background: #fb923c; animation: dropBomb 35s infinite linear; animation-fill-mode: both; }
+    .bomb-delay-1 { animation-delay: 0s; }
+    .bomb-delay-2 { animation-delay: 0.3s; }
+    .bomb-delay-3 { animation-delay: 0.6s; }
+    .bomb-delay-4 { animation-delay: 0.9s; }
+
+    /* 3. LEOPARD TANK ÇİFT ATIŞ ANİMASYONLARI (Toplam Döngü: 28s) */
+    @keyframes tankMoveLeft {
+        0% { transform: translateX(-100vw); opacity: 0; }
+        5% { transform: translateX(5vw); opacity: 0.9; }
+        10% { transform: translateX(5vw); opacity: 0.9; } /* Bekle Atış 1 */
+        10.5% { transform: translateX(3vw); opacity: 0.9; } /* Geri Tepme 1 */
+        12% { transform: translateX(5vw); opacity: 0.9; } /* Toparlan */
+        18% { transform: translateX(5vw); opacity: 0.9; } /* Bekle Atış 2 */
+        18.5% { transform: translateX(3vw); opacity: 0.9; } /* Geri Tepme 2 */
+        20% { transform: translateX(5vw); opacity: 0.9; } /* Toparlan */
+        25% { transform: translateX(5vw); opacity: 0; } /* Soluklaş */
+        100% { transform: translateX(-100vw); opacity: 0; }
+    }
+
+    @keyframes fireShellLeft1 {
+        0%, 9.9% { transform: translateX(0); opacity: 0; }
+        10% { transform: translateX(0); opacity: 1; }
+        13% { transform: translateX(100vw); opacity: 1; }
+        13.1%, 100% { transform: translateX(100vw); opacity: 0; }
+    }
+    @keyframes fireShellLeft2 {
+        0%, 17.9% { transform: translateX(0); opacity: 0; }
+        18% { transform: translateX(0); opacity: 1; }
+        21% { transform: translateX(100vw); opacity: 1; }
+        21.1%, 100% { transform: translateX(100vw); opacity: 0; }
+    }
+
+    @keyframes muzzleFlashLeft1 { 0%, 9.8%, 10.2%, 100% { opacity: 0; } 10% { opacity: 1; } }
+    @keyframes muzzleFlashLeft2 { 0%, 17.8%, 18.2%, 100% { opacity: 0; } 18% { opacity: 1; } }
+
+    /* Sağ Tank Animasyonları (50% gecikmeli yansıması) */
+    @keyframes tankMoveRight {
+        0%, 50% { transform: translateX(100vw); opacity: 0; }
+        55% { transform: translateX(-5vw); opacity: 0.9; }
+        60% { transform: translateX(-5vw); opacity: 0.9; }
+        60.5% { transform: translateX(-3vw); opacity: 0.9; }
+        62% { transform: translateX(-5vw); opacity: 0.9; }
+        68% { transform: translateX(-5vw); opacity: 0.9; }
+        68.5% { transform: translateX(-3vw); opacity: 0.9; }
+        70% { transform: translateX(-5vw); opacity: 0.9; }
+        75% { transform: translateX(-5vw); opacity: 0; }
+        100% { transform: translateX(100vw); opacity: 0; }
+    }
+
+    @keyframes fireShellRight1 {
+        0%, 59.9% { transform: translateX(0); opacity: 0; }
+        60% { transform: translateX(0); opacity: 1; }
+        63% { transform: translateX(-100vw); opacity: 1; }
+        63.1%, 100% { transform: translateX(-100vw); opacity: 0; }
+    }
+    @keyframes fireShellRight2 {
+        0%, 67.9% { transform: translateX(0); opacity: 0; }
+        68% { transform: translateX(0); opacity: 1; }
+        71% { transform: translateX(-100vw); opacity: 1; }
+        71.1%, 100% { transform: translateX(-100vw); opacity: 0; }
+    }
+
+    @keyframes muzzleFlashRight1 { 0%, 59.8%, 60.2%, 100% { opacity: 0; } 60% { opacity: 1; } }
+    @keyframes muzzleFlashRight2 { 0%, 67.8%, 68.2%, 100% { opacity: 0; } 68% { opacity: 1; } }
+
+    /* Sınıflar atamaları */
+    .tank-left-anim { animation: tankMoveLeft 28s infinite; animation-fill-mode: both; }
+    .tank-shell-left-1 { animation: fireShellLeft1 28s infinite; animation-fill-mode: both; }
+    .tank-shell-left-2 { animation: fireShellLeft2 28s infinite; animation-fill-mode: both; }
+    .muzzle-flash-left-1 { animation: muzzleFlashLeft1 28s infinite; animation-fill-mode: both; }
+    .muzzle-flash-left-2 { animation: muzzleFlashLeft2 28s infinite; animation-fill-mode: both; }
+
+    .tank-right-anim { animation: tankMoveRight 28s infinite; animation-fill-mode: both; }
+    .tank-shell-right-1 { animation: fireShellRight1 28s infinite; animation-fill-mode: both; }
+    .tank-shell-right-2 { animation: fireShellRight2 28s infinite; animation-fill-mode: both; }
+    .muzzle-flash-right-1 { animation: muzzleFlashRight1 28s infinite; animation-fill-mode: both; }
+    .muzzle-flash-right-2 { animation: muzzleFlashRight2 28s infinite; animation-fill-mode: both; }
+
+
+    /* 4. HAVA SAVUNMA SİSTEMİ ANİMASYONLARI (Toplam Döngü: 20s) */
+    @keyframes targetPlaneFly {
+        0% { transform: translateX(-30vw); opacity: 0; }
+        10% { opacity: 1; }
+        45% { transform: translateX(45vw); opacity: 1; } /* Vurulma noktası */
+        46%, 100% { transform: translateX(45vw); opacity: 0; } /* Uçak kaybolur */
+    }
+
+    @keyframes samMissileFire {
+        0%, 35% { transform: translate(0, 0) rotate(-45deg); opacity: 0; }
+        35.1% { transform: translate(0, 0) rotate(-45deg); opacity: 1; }
+        45% { transform: translate(-35vw, -35vh) rotate(-45deg); opacity: 1; } /* Sağ alttan sol yukarı çapraz uçuş ve burç yönü */
+        45.1%, 100% { transform: translate(-35vw, -35vh) rotate(-45deg); opacity: 0; }
+    }
+
+    @keyframes samExplode {
+        0%, 44.9% { opacity: 0; transform: scale(0.5); }
+        45% { opacity: 0.9; transform: scale(1.5); }
+        48% { opacity: 0; transform: scale(2); }
+        100% { opacity: 0; }
+    }
+
+    .target-plane-anim { animation: targetPlaneFly 20s linear infinite; animation-fill-mode: both; }
+    .sam-missile { animation: samMissileFire 20s ease-in infinite; animation-fill-mode: both; }
+    .sam-explosion { animation: samExplode 20s ease-out infinite; animation-fill-mode: both; }
+
+</style>
