@@ -100,9 +100,22 @@
         /* Galerilerde ilk ve son resmin merkeze gelebilmesi için görünmez boşluklar */
         .gallery-container::before, .gallery-container::after { content: ''; flex-shrink: 0; width: 12.5%; }
         @media (min-width: 768px) { .gallery-container::before, .gallery-container::after { width: 25%; } }
+
+        /* ========================================================= */
+        /* MOBİL ÖLÇEKLENDİRME - KUTULARIN EKRANA SIĞMASI İÇİN HACK */
+        /* ========================================================= */
+        @media (max-width: 768px) {
+            #mobile-scale-wrapper {
+                transform: scale(0.90); /* İçeriği %10 küçültür */
+                transform-origin: top center; /* Küçülürken yukarıdan ve merkezden hizalar */
+                width: 110%; /* Küçülmeden kaynaklı sağda solda boşluk kalmaması için genişliği kompanse eder */
+                margin-left: -5%; /* Orantılı yerleşim sağlar */
+            }
+        }
     </style>
 </head>
-<body class="antialiased min-h-screen flex flex-col relative">
+<!-- overflow-x-hidden eklendi: Bu kod mobilde ekranın sağa sola kaymasını (yatay scroll'u) kesin olarak engeller -->
+<body class="antialiased min-h-screen flex flex-col relative overflow-x-hidden">
 
     <div class="ambient-glow"></div>
 
@@ -192,7 +205,8 @@
         </div>
     </main>
 
-    <div class="w-full pb-32 flex-grow z-10">
+    <!-- id="mobile-scale-wrapper" Eklendi: Sayfaların yüklendiği alanı mobilde topluca küçültecek -->
+    <div id="mobile-scale-wrapper" class="w-full pb-32 flex-grow z-10">
         <section id="hakkimda" class="hidden fade-in min-h-[60vh] flex-col items-center justify-center border border-dashed border-cyan-800/50 bg-cyan-950/10 rounded-xl text-slate-400 p-4 md:p-8 max-w-7xl mx-auto w-full">
             <p>Yükleniyor...</p>
         </section>
