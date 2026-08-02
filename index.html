@@ -20,25 +20,6 @@
             background-size: 50px 50px;
         }
 
-        /* 1. iOS Safari Optimizasyonu - Apple'ın form (iletişim) stillerini ezer */
-        input, textarea, button, select {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            outline: none;
-        }
-
-        /* 2. iOS Safari Resim Küçülme Hatası (Flexbox Bug) Kesin Çözümü */
-        img {
-            max-width: 100%;
-            height: auto;
-            -webkit-user-drag: none;
-        }
-        .gallery-item, .gallery-item img {
-            flex-shrink: 0 !important;
-            -webkit-flex-shrink: 0 !important;
-        }
-
         /* Geliştirilmiş, pürüzsüz arka plan aydınlatması */
         .ambient-glow {
             position: fixed;
@@ -87,49 +68,49 @@
         #chat-messages::-webkit-scrollbar-track { background: rgba(6, 182, 212, 0.1); border-radius: 10px; }
         #chat-messages::-webkit-scrollbar-thumb { background: rgba(6, 182, 212, 0.5); border-radius: 10px; }
 
-        /* Aktif Menü Alt Çizgi Animasyonu */
-        .nav-link { position: relative; transition: all 0.3s ease; }
-        .nav-link.active { color: #ffffff; font-weight: 600; }
+        /* YENİ EKLENEN: Aktif Menü Alt Çizgi Animasyonu */
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .nav-link.active {
+            color: #ffffff;
+            font-weight: 600;
+        }
         .nav-link.active::after {
-            content: ''; position: absolute; left: 0; bottom: -6px; width: 100%; height: 3px;
-            background: linear-gradient(to right, #06b6d4, #a855f7); border-radius: 999px;
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, #06b6d4, #a855f7);
+            border-radius: 999px;
             animation: slideLine 0.3s ease-out forwards;
         }
-        @keyframes slideLine { from { width: 0; opacity: 0; } to { width: 100%; opacity: 1; } }
+        @keyframes slideLine {
+            from { width: 0; opacity: 0; }
+            to { width: 100%; opacity: 1; }
+        }
 
         /* Galerilerde ilk ve son resmin merkeze gelebilmesi için görünmez boşluklar */
-        .gallery-container::before, .gallery-container::after { content: ''; flex-shrink: 0; width: 12.5%; }
-        @media (min-width: 768px) { .gallery-container::before, .gallery-container::after { width: 25%; } }
+        .gallery-container::before,
+        .gallery-container::after {
+            content: '';
+            flex-shrink: 0;
+            width: 12.5%; /* Mobil için: (100 - 75) / 2 */
+        }
 
-        /* ========================================================= */
-        /* MOBİL İÇİN KESİN ÇÖZÜM: ZOOM VE EKRANA KİLİTLEME HACK'İ */
-        /* ========================================================= */
-        @media (max-width: 768px) {
-            html, body {
-                overflow-x: hidden !important; /* Ekranın sağa sola kaymasını kökten engeller */
-                width: 100vw !important;
-                max-width: 100vw !important;
-            }
-
-            #mobile-scale-wrapper {
-                zoom: 0.85; /* Senin fikrinin tam karşılığı! Her şeyi %15 küçültür ama düzeni bozmaz */
-                width: 100% !important;
-                padding-left: 0.5rem !important;
-                padding-right: 0.5rem !important;
-                box-sizing: border-box !important;
-            }
-
-            /* Kesikli Mavi Çizgiyi (Section) Ekrana Hapsetme */
-            #mobile-scale-wrapper section {
-                max-width: 100% !important;
-                width: 100% !important;
-                overflow-x: hidden !important;
-                box-sizing: border-box !important;
+        @media (min-width: 768px) {
+            .gallery-container::before,
+            .gallery-container::after {
+                width: 25%; /* PC (Masaüstü) için: (100 - 50) / 2 */
             }
         }
+
     </style>
 </head>
-<body class="antialiased min-h-screen flex flex-col relative overflow-x-hidden">
+<body class="antialiased min-h-screen flex flex-col relative">
 
     <div class="ambient-glow"></div>
 
@@ -141,10 +122,10 @@
         <div class="particle p-cyan node-5"></div>
     </div>
 
-    <nav class="w-full p-4 md:p-6 flex justify-between items-center max-w-7xl mx-auto z-[60] relative">
-        <div onclick="showSection('home')" class="flex items-center gap-2 font-bold text-lg cursor-pointer hover:opacity-80 transition z-[70]">
+    <nav class="w-full p-6 flex justify-between items-center max-w-7xl mx-auto z-10">
+        <div onclick="showSection('home')" class="flex items-center gap-2 font-bold text-lg cursor-pointer hover:opacity-80 transition">
             <img src="jpegs/figure2.jpg" alt="GunsaAI Logo" class="w-8 h-8 rounded-md border border-cyan-500 object-cover shadow-[0_0_10px_rgba(6,182,212,0.5)]">
-            <span class="text-white hidden sm:inline">GunsaAI</span><span class="text-cyan-400 hidden sm:inline">.dev</span>
+            <span class="text-white">GunsaAI</span><span class="text-cyan-400">.dev</span>
         </div>
 
         <div class="hidden lg:flex items-center gap-6 text-sm text-slate-400">
@@ -154,36 +135,21 @@
             <button id="nav-bitirme" onclick="showSection('bitirme')" class="nav-link hover:text-cyan-400 transition" data-tr="Bitirme Projesi" data-en="Graduation Project">Bitirme Projesi</button>
             <button id="nav-deneyim" onclick="showSection('deneyim')" class="nav-link hover:text-cyan-400 transition" data-tr="Deneyim" data-en="Experience">Deneyim</button>
             <button id="nav-sertifikalar" onclick="showSection('sertifikalar')" class="nav-link hover:text-cyan-400 transition" data-tr="Etkinlikler ve Sertifikalar" data-en="Events and Certificates">Etkinlikler ve Sertifikalar</button>
+            <!-- Kaynaklar Butonu Buradan Çıkarıldı -->
             <button id="nav-iletisim" onclick="showSection('iletisim')" class="nav-link hover:text-cyan-400 transition" data-tr="İletişim" data-en="Contact">İletişim</button>
         </div>
 
-        <div class="flex items-center gap-4 z-[70]">
+        <div class="hidden md:flex items-center">
             <div class="relative inline-flex items-center cursor-pointer w-16 h-8 bg-cyan-950/40 border border-cyan-800 rounded-full" onclick="toggleLanguage()">
                 <div class="absolute left-1 top-1 w-6 h-6 bg-cyan-500 rounded-full shadow-[0_0_10px_rgba(6,182,212,0.6)] switch-slider" id="lang-slider"></div>
                 <span class="w-1/2 text-center text-[10px] font-bold z-10 text-cyan-50 transition-colors" id="text-tr">TR</span>
                 <span class="w-1/2 text-center text-[10px] font-bold z-10 text-slate-500 transition-colors" id="text-en">EN</span>
             </div>
-
-            <button id="mobile-menu-btn" class="lg:hidden text-cyan-400 hover:text-cyan-300 focus:outline-none transition p-1" onclick="toggleMobileMenu()">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path id="menu-icon-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-            </button>
         </div>
     </nav>
 
-    <div id="mobile-menu" class="fixed inset-0 bg-[#050505]/98 backdrop-blur-2xl z-[65] hidden flex-col items-center justify-center gap-6 opacity-0 transition-opacity duration-300">
-        <button onclick="showSectionMobile('home')" class="text-2xl font-bold text-white hover:text-cyan-400 transition" data-tr="Ana Sayfa" data-en="Home">Ana Sayfa</button>
-        <button onclick="showSectionMobile('hakkimda')" class="text-xl font-medium text-slate-300 hover:text-cyan-400 transition" data-tr="Hakkımda" data-en="About Me">Hakkımda</button>
-        <button onclick="showSectionMobile('yetenekler')" class="text-xl font-medium text-slate-300 hover:text-cyan-400 transition" data-tr="Yetenekler" data-en="Skills">Yetenekler</button>
-        <button onclick="showSectionMobile('projeler')" class="text-xl font-medium text-slate-300 hover:text-cyan-400 transition" data-tr="Projeler" data-en="Projects">Projeler</button>
-        <button onclick="showSectionMobile('bitirme')" class="text-xl font-medium text-slate-300 hover:text-cyan-400 transition" data-tr="Bitirme Projesi" data-en="Graduation Project">Bitirme Projesi</button>
-        <button onclick="showSectionMobile('deneyim')" class="text-xl font-medium text-slate-300 hover:text-cyan-400 transition" data-tr="Deneyim" data-en="Experience">Deneyim</button>
-        <button onclick="showSectionMobile('sertifikalar')" class="text-xl font-medium text-slate-300 hover:text-cyan-400 transition" data-tr="Etkinlikler ve Sertifikalar" data-en="Events and Certificates">Etkinlikler ve Sertifikalar</button>
-        <button onclick="showSectionMobile('iletisim')" class="text-xl font-medium text-slate-300 hover:text-cyan-400 transition" data-tr="İletişim" data-en="Contact">İletişim</button>
-    </div>
+    <main id="home-section" class="flex-grow flex flex-col items-center justify-center px-4 text-center z-10 mt-12 mb-24 fade-in">
 
-    <main id="home-section" class="flex-grow flex flex-col items-center justify-center px-4 text-center z-10 mt-6 lg:mt-12 mb-24 fade-in">
         <div class="mb-8 relative animate-float">
             <img src="jpegs/figure1.jpg" alt="Salih Gündüz Profil" class="w-32 h-32 rounded-3xl object-cover border border-cyan-500/50 shadow-[0_0_40px_rgba(6,182,212,0.3)]">
         </div>
@@ -194,8 +160,12 @@
         </div>
 
         <h1 class="text-4xl md:text-6xl font-bold text-white tracking-tight max-w-4xl mb-4 flex flex-col gap-4 sm:gap-6">
-            <span data-tr="Hayalden Gerçeğe Bir" data-en="An Engineering Story">Hayalden Gerçeğe Bir</span>
-            <span data-tr="Mühendislik Öyküsü" data-en="From Dream to Reality">Mühendislik Öyküsü</span>
+            <span data-tr="Hayalden Gerçeğe Bir" data-en="An Engineering Story">
+                Hayalden Gerçeğe Bir
+            </span>
+            <span data-tr="Mühendislik Öyküsü" data-en="From Dream to Reality">
+                Mühendislik Öyküsü
+            </span>
         </h1>
 
         <div class="text-xl md:text-2xl font-mono mt-2 mb-10 flex items-center justify-center gap-2">
@@ -210,36 +180,45 @@
                 Projelere Göz At
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19L20 5M20 5v10M20 5H10"></path></svg>
             </button>
+
             <button onclick="toggleChat()" class="border border-purple-600/60 bg-purple-900/10 hover:bg-purple-900/20 text-purple-300 px-8 py-3 rounded-lg font-semibold flex items-center justify-center transition" data-tr="GunsaAI İle Görüş" data-en="Chat With GunsaAI">
                 GunsaAI İle Görüş
             </button>
+
             <button onclick="showSection('iletisim')" class="border border-purple-600/60 bg-purple-900/10 hover:bg-purple-900/20 text-purple-300 px-8 py-3 rounded-lg font-semibold flex items-center justify-center transition" data-tr="İletişim" data-en="Contact">
                 İletişim
             </button>
         </div>
     </main>
 
-    <!-- id="mobile-scale-wrapper" Eklendi: Sayfaların yüklendiği alanı mobilde topluca ZOOM ile küçültecek -->
-    <div id="mobile-scale-wrapper" class="w-full pb-32 flex-grow z-10">
-        <section id="hakkimda" class="hidden fade-in min-h-[60vh] flex-col items-center justify-center border border-dashed border-cyan-800/50 bg-cyan-950/10 rounded-xl text-slate-400 p-4 md:p-8 max-w-7xl mx-auto w-full">
+    <div class="w-full pb-32 flex-grow z-10">
+        <section id="hakkimda" class="hidden fade-in min-h-[60vh] flex-col items-center justify-center border border-dashed border-cyan-800/50 bg-cyan-950/10 rounded-xl text-slate-400 p-8 max-w-7xl mx-auto w-full px-4 md:px-8">
             <p>Yükleniyor...</p>
         </section>
-        <section id="yetenekler" class="hidden fade-in min-h-[60vh] flex-col items-center justify-center border border-dashed border-cyan-800/50 bg-cyan-950/10 rounded-xl text-slate-400 p-4 md:p-8 max-w-7xl mx-auto w-full">
+
+        <section id="yetenekler" class="hidden fade-in min-h-[60vh] flex-col items-center justify-center border border-dashed border-cyan-800/50 bg-cyan-950/10 rounded-xl text-slate-400 p-8 max-w-7xl mx-auto w-full px-4 md:px-8">
             <p>Yükleniyor...</p>
         </section>
-        <section id="projeler" class="hidden fade-in min-h-[60vh] flex-col items-center justify-center border border-dashed border-cyan-800/50 bg-cyan-950/10 rounded-xl text-slate-400 p-4 md:p-8 w-full">
+
+        <section id="projeler" class="hidden fade-in min-h-[60vh] flex-col items-center justify-center border border-dashed border-cyan-800/50 bg-cyan-950/10 rounded-xl text-slate-400 p-8 w-full px-4 md:px-8">
             <p>Yükleniyor...</p>
         </section>
-        <section id="bitirme" class="hidden fade-in min-h-[60vh] flex-col items-center justify-center border border-dashed border-cyan-800/50 bg-cyan-950/10 rounded-xl text-slate-400 p-4 md:p-8 w-full">
+
+        <section id="bitirme" class="hidden fade-in min-h-[60vh] flex-col items-center justify-center border border-dashed border-cyan-800/50 bg-cyan-950/10 rounded-xl text-slate-400 p-8 w-full px-4 md:px-8">
             <p>Yükleniyor...</p>
         </section>
-        <section id="deneyim" class="hidden fade-in min-h-[60vh] flex-col items-center justify-center border border-dashed border-cyan-800/50 bg-cyan-950/10 rounded-xl text-slate-400 p-4 md:p-8 max-w-7xl mx-auto w-full">
+
+        <section id="deneyim" class="hidden fade-in min-h-[60vh] flex-col items-center justify-center border border-dashed border-cyan-800/50 bg-cyan-950/10 rounded-xl text-slate-400 p-8 max-w-7xl mx-auto w-full px-4 md:px-8">
             <p>Yükleniyor...</p>
         </section>
-        <section id="sertifikalar" class="hidden fade-in min-h-[60vh] flex-col items-center justify-center border border-dashed border-cyan-800/50 bg-cyan-950/10 rounded-xl text-slate-400 p-4 md:p-8 w-full">
+
+        <section id="sertifikalar" class="hidden fade-in min-h-[60vh] flex-col items-center justify-center border border-dashed border-cyan-800/50 bg-cyan-950/10 rounded-xl text-slate-400 p-8 w-full px-4 md:px-8">
             <p>Yükleniyor...</p>
         </section>
-        <section id="iletisim" class="hidden fade-in min-h-[60vh] flex-col items-center justify-center border border-dashed border-cyan-800/50 bg-cyan-950/10 rounded-xl text-slate-400 p-4 md:p-8 max-w-7xl mx-auto w-full">
+
+        <!-- Kaynaklar Section Buradan Çıkarıldı -->
+
+        <section id="iletisim" class="hidden fade-in min-h-[60vh] flex-col items-center justify-center border border-dashed border-cyan-800/50 bg-cyan-950/10 rounded-xl text-slate-400 p-8 max-w-7xl mx-auto w-full px-4 md:px-8">
             <p>Yükleniyor...</p>
         </section>
     </div>
@@ -251,7 +230,7 @@
         <img id="modal-img" src="" class="max-w-[95%] max-h-[90vh] object-contain rounded-xl shadow-[0_0_50px_rgba(6,182,212,0.4)] transform scale-95 transition-transform duration-300">
     </div>
 
-    <div id="ai-chat-modal" class="hidden fixed bottom-24 right-4 md:right-6 w-[90%] max-w-[380px] bg-[#09090b]/95 border border-cyan-500/50 rounded-2xl shadow-[0_0_40px_rgba(6,182,212,0.2)] backdrop-blur-xl flex-col overflow-hidden z-[95] transform scale-95 opacity-0 transition-all duration-300">
+    <div id="ai-chat-modal" class="hidden fixed bottom-24 right-6 w-[90%] max-w-[380px] bg-[#09090b]/95 border border-cyan-500/50 rounded-2xl shadow-[0_0_40px_rgba(6,182,212,0.2)] backdrop-blur-xl flex-col overflow-hidden z-50 transform scale-95 opacity-0 transition-all duration-300">
         <div class="bg-gradient-to-r from-cyan-950 to-[#09090b] p-4 border-b border-cyan-800/50 flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-full bg-cyan-900 flex items-center justify-center border border-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.5)]">
@@ -265,7 +244,7 @@
                     </div>
                 </div>
             </div>
-            <button onclick="toggleChat()" class="text-slate-400 hover:text-white transition p-2">&times;</button>
+            <button onclick="toggleChat()" class="text-slate-400 hover:text-white transition">&times;</button>
         </div>
 
         <div id="chat-messages" class="h-80 p-4 overflow-y-auto flex flex-col gap-4 text-sm font-medium">
@@ -282,41 +261,12 @@
         </div>
     </div>
 
-    <button onclick="toggleChat()" class="fixed bottom-6 right-4 md:right-6 w-14 h-14 bg-cyan-500 rounded-full flex items-center justify-center text-slate-950 shadow-[0_0_20px_rgba(6,182,212,0.6)] hover:scale-105 hover:bg-cyan-400 transition-all z-[90] group">
+    <button onclick="toggleChat()" class="fixed bottom-6 right-6 w-14 h-14 bg-cyan-500 rounded-full flex items-center justify-center text-slate-950 shadow-[0_0_20px_rgba(6,182,212,0.6)] hover:scale-105 hover:bg-cyan-400 transition-all z-40 group">
         <svg class="w-6 h-6 group-hover:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
         <svg class="w-6 h-6 hidden group-hover:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
     </button>
 
     <script>
-        // MOBİL MENÜ YÖNETİMİ
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            const iconPath = document.getElementById('menu-icon-path');
-
-            if (menu.classList.contains('hidden')) {
-                menu.classList.remove('hidden');
-                menu.classList.add('flex');
-                setTimeout(() => menu.classList.remove('opacity-0'), 10);
-                iconPath.setAttribute('d', 'M6 18L18 6M6 6l12 12'); // Çarpı (Kapat) İkonu
-                document.body.style.overflow = 'hidden'; // Menü açıkken arka sayfa kaymasını engelle
-            } else {
-                menu.classList.add('opacity-0');
-                setTimeout(() => {
-                    menu.classList.add('hidden');
-                    menu.classList.remove('flex');
-                }, 300);
-                iconPath.setAttribute('d', 'M4 6h16M4 12h16M4 18h16'); // Üç Çizgi (Menü) İkonu
-                document.body.style.overflow = 'auto'; // Kaydırmayı geri aç
-            }
-        }
-
-        // Mobilden linke tıklanınca menüyü kapatıp sayfaya gitme
-        function showSectionMobile(sectionId) {
-            toggleMobileMenu();
-            showSection(sectionId);
-        }
-
-        // SAYFA DEĞİŞTİRME YÖNETİMİ
         function showSection(sectionId) {
             const homeSection = document.getElementById('home-section');
             if (sectionId === 'home') {
@@ -336,6 +286,7 @@
                 }
             }
 
+            // 'kaynaklar' diziden çıkarıldı
             const sections = ['hakkimda', 'yetenekler', 'projeler', 'bitirme', 'deneyim', 'sertifikalar', 'iletisim'];
 
             sections.forEach(id => {
@@ -387,13 +338,13 @@
                 textTr.classList.add('text-cyan-50');
             }
 
-            // Sayfadaki (mobil menü dahil) tüm dil metinlerini otomatik çevir
             document.querySelectorAll('[data-tr]').forEach(el => {
                 el.innerHTML = el.getAttribute(`data-${currentLang}`);
             });
         }
 
         async function sayfalariYukle() {
+            // 'kaynaklar' nesnesi bolumler dizisinden çıkarıldı
             const bolumler = [
                 { id: 'hakkimda', dosya: 'Pages/About_Me.html' },
                 { id: 'yetenekler', dosya: 'Pages/Skills.html' },
@@ -423,7 +374,7 @@
 
         document.addEventListener('DOMContentLoaded', sayfalariYukle);
 
-        // API anahtarı ayarı
+        // API anahtarını güvenli config dosyasından çekiyoruz
         const GEMINI_API_KEY = typeof CONFIG !== 'undefined' ? CONFIG.GEMINI_API_KEY : 'API_KEY_BULUNAMADI';
         const chatModal = document.getElementById('ai-chat-modal');
         const chatMessages = document.getElementById('chat-messages');
@@ -489,6 +440,7 @@
             chatInput.value = '';
             const loadingId = appendMessage('', 'ai', true);
 
+            // Yapay zekaya (GunsaAI) verilen katı kimlik ve yetki sınırları
             const systemPrompt = `
             Senin adın GunsaAI. Sen Salih Gündüz'ün kişisel portfolyo asistanısın.
 
@@ -502,7 +454,7 @@
             - Odak Alanları: Gömülü Sistemler, IoT, Yapay Zeka (Machine Learning), Veri Analizi, PCB Tasarımı, Kontrol Sistemleri.
             - Yetenekler: Python, C++, Altium, SolidWorks, MATLAB, ROS2.
             - Öne Çıkan Projeleri:
-              * İKA (Teknofest): NVIDIA Jetson ve Pixhawk ile Otonom İnsansız Kara Aracı tasarımı.
+              * İKA (Teknofest): NVIDIA Jetson ve Pixhawk ile Otonom İnsansız Kara Aracı tasarımı (LiDAR+Kamera Sensör Füzyonu).
               * İHA (Teknofest): VTOL Ana İHA ve Decoy (Sahte) İHA konseptli elektronik harp aracı.
               * Akıllı Sera: Arduino ve STM32 kullanılarak geliştirilen IoT tabanlı toprak nemi ve otomatik sulama sistemi.
               * El Hareketi Kontrolü: Bilgisayarı kamerasından el hareketleriyle (Neural Network) kontrol etme sistemi.
@@ -516,11 +468,14 @@
                     throw new Error("Güvenli API anahtarı (config.js) bulunamadı! Lütfen geliştiriciyle iletişime geçin.");
                 }
 
+                // DİKKAT: Senin hesabında flash-1.5 modeli kapalı olduğu için bunu flash-3 ile güncelledim!
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${GEMINI_API_KEY}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        contents: [{ parts: [{ text: systemPrompt }] }]
+                        contents: [{
+                            parts: [{ text: systemPrompt }]
+                        }]
                     })
                 });
 
@@ -540,9 +495,37 @@
                 removeMessage(loadingId);
                 appendMessage(`Sistemsel bir arıza oluştu: ${error.message}`, 'ai');
             }
+
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: systemPrompt + text }]
+                        }]
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API Hatası: ${errorData.error?.message || "Bilinmeyen hata"}`);
+                }
+
+                const data = await response.json();
+                const aiResponse = data.candidates[0].content.parts[0].text;
+
+                removeMessage(loadingId);
+                appendMessage(aiResponse, 'ai');
+
+            } catch (error) {
+                console.error("Hata:", error);
+                removeMessage(loadingId);
+                appendMessage(`Bağlantı kurulamadı. Sebep: ${error.message}`, 'ai');
+            }
         }
 
-        // RESİM MODAL (BÜYÜTME) İŞLEMLERİ
         function openImageModal(src) {
             const modal = document.getElementById('image-modal');
             const modalImg = document.getElementById('modal-img');
@@ -576,15 +559,24 @@
             }
         });
 
-        // PROJE DETAY PANELİ
+        // ==========================================
+        // PROJE DETAY MODAL (PANEL) İŞLEMLERİ
+        // ==========================================
         window.openProjectDetailModal = function(titleId, descId) {
             const modal = document.getElementById('project-detail-modal');
             const titleEl = document.getElementById(titleId);
             const descEl = document.getElementById(descId);
 
-            if (!modal || !titleEl || !descEl) return;
+            if (!modal || !titleEl || !descEl) {
+                console.error("Panel bulunamadı!");
+                return;
+            }
 
+            // KESİN ÇÖZÜM BURADA: Modalı uzun sayfanın içinden çıkarıp doğrudan gövdeye (body) ekliyoruz.
+            // Bu sayede sayfanın neresinde olursan ol, panel TAM BASTIĞIN YERDE (Gözünün önünde) açılır!
             document.body.appendChild(modal);
+
+            // Metinleri ve dilleri panele aktar
             const modalTitle = document.getElementById('modal-project-title');
             const modalDesc = document.getElementById('modal-project-content');
             const lang = (typeof currentLang !== 'undefined') ? currentLang : 'tr';
@@ -592,11 +584,17 @@
             modalTitle.innerHTML = titleEl.getAttribute(`data-${lang}`) || titleEl.innerHTML;
             modalDesc.innerHTML = descEl.getAttribute(`data-${lang}`) || descEl.innerHTML;
 
+            // Paneli görünür yap
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+
+            // Kullanıcının kafası karışmasın diye arkadaki sayfanın kaymasını KİLİTLE
             document.body.style.overflow = 'hidden';
 
-            setTimeout(() => { modal.classList.remove('opacity-0'); }, 10);
+            // Animasyonla buğulu şekilde ekrana getir
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+            }, 10);
         };
 
         window.closeProjectDetailModal = function() {
@@ -604,6 +602,8 @@
             if (!modal) return;
 
             modal.classList.add('opacity-0');
+
+            // Arka plandaki sayfa kaydırma kilidini AÇ (Normale dön)
             document.body.style.overflow = 'auto';
 
             setTimeout(() => {
@@ -612,6 +612,7 @@
             }, 300);
         };
 
+        // Arka plandaki buğulu siyah boşluğa tıklandığında da paneli kapat
         document.addEventListener('click', function(e) {
             const modal = document.getElementById('project-detail-modal');
             if (modal && !modal.classList.contains('hidden') && e.target === modal) {
@@ -619,12 +620,13 @@
             }
         });
 
-        // GALERİ (KAYDIRMA) İŞLEMLERİ
         function handleGalleryClick(element) {
             if (element.classList.contains('active-center')) {
+                // Resim ortadaysa tek tıkla modal'ı (büyütme ekranını) aç
                 const imgSrc = element.querySelector('img').src;
                 openImageModal(imgSrc);
             } else {
+                // Resim yandaysa merkeze kaydır
                 element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
             }
         }
@@ -669,3 +671,4 @@
     </script>
 </body>
 </html>
+
