@@ -1,7 +1,18 @@
 <style>
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .gallery-container { scroll-behavior: smooth; scroll-snap-type: x mandatory; }
+
+    /* İOS Safari Kaydırma ve Esneklik Düzeltmeleri */
+    .gallery-container {
+        scroll-behavior: smooth;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch; /* İOS'ta parmakla kaydırmayı pürüzsüz yapar */
+    }
+
+    .gallery-item, .gallery-item img {
+        flex-shrink: 0 !important;
+        -webkit-flex-shrink: 0 !important; /* İOS'un resimleri büzüştürmesini kesin engeller */
+    }
 
     /* Mavi seçimi engellemek için */
     .no-select {
@@ -20,50 +31,50 @@
 <div class="w-full max-w-4xl mx-auto text-left py-4 animate-fadeIn no-select relative">
 
     <div id="imageModal" class="fixed inset-0 bg-[#050505]/95 backdrop-blur-xl flex items-center justify-center transition-all duration-300" style="z-index: 99999; opacity: 0; pointer-events: none;">
-        <button onclick="closeModal()" class="absolute top-6 right-8 text-slate-300 hover:text-cyan-400 text-6xl font-light transition-colors duration-200 focus:outline-none" style="z-index: 100000;">&times;</button>
-        <img id="modalImg" class="max-w-[90vw] max-h-[90vh] object-contain rounded-xl border-2 border-cyan-500 shadow-[0_0_30px_rgba(6,182,212,0.3)] transition-transform duration-300 scale-95" src="" alt="Büyük Görsel" style="z-index: 100000;">
+        <button onclick="closeModal()" class="absolute top-6 right-6 md:right-8 text-slate-300 hover:text-cyan-400 text-5xl md:text-6xl font-light transition-colors duration-200 focus:outline-none" style="z-index: 100000;">&times;</button>
+        <img id="modalImg" class="max-w-[95vw] md:max-w-[90vw] max-h-[90vh] object-contain rounded-xl border-2 border-cyan-500 shadow-[0_0_30px_rgba(6,182,212,0.3)] transition-transform duration-300 scale-95" src="" alt="Büyük Görsel" style="z-index: 100000;">
     </div>
 
     <div class="w-full mb-16 mt-4 relative">
-        <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-6 pb-6 pt-6 items-center px-[20%] md:px-[35%] outline-none relative" tabindex="0">
+        <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 md:gap-6 pb-6 pt-6 items-center px-[15%] md:px-[35%] outline-none relative" tabindex="0">
 
-            <div class="snap-center shrink-0 w-[240px] h-[330px] md:w-[300px] md:h-[420px] bg-[#0a0a0a] rounded-2xl p-1 bg-gradient-to-tr from-cyan-400 to-purple-500 gallery-item blurred-item" onclick="handleGalleryClick(this)">
+            <div class="snap-center shrink-0 w-[220px] h-[310px] md:w-[300px] md:h-[420px] bg-[#0a0a0a] rounded-2xl p-1 bg-gradient-to-tr from-cyan-400 to-purple-500 gallery-item blurred-item" onclick="handleGalleryClick(this)">
                 <img src="jpegs/foto_1.png" alt="Fotoğraf 1" class="w-full h-full object-cover rounded-xl border-4 border-[#050505] pointer-events-none" onerror="this.parentElement.remove();">
             </div>
-            <div class="snap-center shrink-0 w-[240px] h-[330px] md:w-[300px] md:h-[420px] bg-[#0a0a0a] rounded-2xl p-1 bg-gradient-to-tr from-cyan-400 to-purple-500 gallery-item blurred-item" onclick="handleGalleryClick(this)">
+            <div class="snap-center shrink-0 w-[220px] h-[310px] md:w-[300px] md:h-[420px] bg-[#0a0a0a] rounded-2xl p-1 bg-gradient-to-tr from-cyan-400 to-purple-500 gallery-item blurred-item" onclick="handleGalleryClick(this)">
                 <img src="jpegs/foto_2.png" alt="Fotoğraf 2" class="w-full h-full object-cover rounded-xl border-4 border-[#050505] pointer-events-none" onerror="this.parentElement.remove();">
             </div>
-            <div class="snap-center shrink-0 w-[240px] h-[330px] md:w-[300px] md:h-[420px] bg-[#0a0a0a] rounded-2xl p-1 bg-gradient-to-tr from-cyan-400 to-purple-500 gallery-item blurred-item" onclick="handleGalleryClick(this)">
+            <div class="snap-center shrink-0 w-[220px] h-[310px] md:w-[300px] md:h-[420px] bg-[#0a0a0a] rounded-2xl p-1 bg-gradient-to-tr from-cyan-400 to-purple-500 gallery-item blurred-item" onclick="handleGalleryClick(this)">
                 <img src="jpegs/foto_3.png" alt="Fotoğraf 3" class="w-full h-full object-cover rounded-xl border-4 border-[#050505] pointer-events-none" onerror="this.parentElement.remove();">
             </div>
-            <div class="snap-center shrink-0 w-[240px] h-[330px] md:w-[300px] md:h-[420px] bg-[#0a0a0a] rounded-2xl p-1 bg-gradient-to-tr from-cyan-400 to-purple-500 gallery-item blurred-item" onclick="handleGalleryClick(this)">
+            <div class="snap-center shrink-0 w-[220px] h-[310px] md:w-[300px] md:h-[420px] bg-[#0a0a0a] rounded-2xl p-1 bg-gradient-to-tr from-cyan-400 to-purple-500 gallery-item blurred-item" onclick="handleGalleryClick(this)">
                 <img src="jpegs/foto_4.png" alt="Fotoğraf 4" class="w-full h-full object-cover rounded-xl border-4 border-[#050505] pointer-events-none" onerror="this.parentElement.remove();">
             </div>
-            <div class="snap-center shrink-0 w-[240px] h-[330px] md:w-[300px] md:h-[420px] bg-[#0a0a0a] rounded-2xl p-1 bg-gradient-to-tr from-cyan-400 to-purple-500 gallery-item blurred-item" onclick="handleGalleryClick(this)">
+            <div class="snap-center shrink-0 w-[220px] h-[310px] md:w-[300px] md:h-[420px] bg-[#0a0a0a] rounded-2xl p-1 bg-gradient-to-tr from-cyan-400 to-purple-500 gallery-item blurred-item" onclick="handleGalleryClick(this)">
                 <img src="jpegs/foto_5.png" alt="Fotoğraf 5" class="w-full h-full object-cover rounded-xl border-4 border-[#050505] pointer-events-none" onerror="this.parentElement.remove();">
             </div>
-            <div class="snap-center shrink-0 w-[240px] h-[330px] md:w-[300px] md:h-[420px] bg-[#0a0a0a] rounded-2xl p-1 bg-gradient-to-tr from-cyan-400 to-purple-500 gallery-item blurred-item" onclick="handleGalleryClick(this)">
+            <div class="snap-center shrink-0 w-[220px] h-[310px] md:w-[300px] md:h-[420px] bg-[#0a0a0a] rounded-2xl p-1 bg-gradient-to-tr from-cyan-400 to-purple-500 gallery-item blurred-item" onclick="handleGalleryClick(this)">
                 <img src="jpegs/foto_6.png" alt="Fotoğraf 6" class="w-full h-full object-cover rounded-xl border-4 border-[#050505] pointer-events-none" onerror="this.parentElement.remove();">
             </div>
-            <div class="snap-center shrink-0 w-[240px] h-[330px] md:w-[300px] md:h-[420px] bg-[#0a0a0a] rounded-2xl p-1 bg-gradient-to-tr from-cyan-400 to-purple-500 gallery-item blurred-item" onclick="handleGalleryClick(this)">
+            <div class="snap-center shrink-0 w-[220px] h-[310px] md:w-[300px] md:h-[420px] bg-[#0a0a0a] rounded-2xl p-1 bg-gradient-to-tr from-cyan-400 to-purple-500 gallery-item blurred-item" onclick="handleGalleryClick(this)">
                 <img src="jpegs/foto_7.png" alt="Fotoğraf 7" class="w-full h-full object-cover rounded-xl border-4 border-[#050505] pointer-events-none" onerror="this.parentElement.remove();">
             </div>
-            <div class="snap-center shrink-0 w-[240px] h-[330px] md:w-[300px] md:h-[420px] bg-[#0a0a0a] rounded-2xl p-1 bg-gradient-to-tr from-cyan-400 to-purple-500 gallery-item blurred-item" onclick="handleGalleryClick(this)">
+            <div class="snap-center shrink-0 w-[220px] h-[310px] md:w-[300px] md:h-[420px] bg-[#0a0a0a] rounded-2xl p-1 bg-gradient-to-tr from-cyan-400 to-purple-500 gallery-item blurred-item" onclick="handleGalleryClick(this)">
                 <img src="jpegs/foto_8.png" alt="Fotoğraf 8" class="w-full h-full object-cover rounded-xl border-4 border-[#050505] pointer-events-none" onerror="this.parentElement.remove();">
             </div>
-            <div class="snap-center shrink-0 w-[240px] h-[330px] md:w-[300px] md:h-[420px] bg-[#0a0a0a] rounded-2xl p-1 bg-gradient-to-tr from-cyan-400 to-purple-500 gallery-item blurred-item" onclick="handleGalleryClick(this)">
+            <div class="snap-center shrink-0 w-[220px] h-[310px] md:w-[300px] md:h-[420px] bg-[#0a0a0a] rounded-2xl p-1 bg-gradient-to-tr from-cyan-400 to-purple-500 gallery-item blurred-item" onclick="handleGalleryClick(this)">
                 <img src="jpegs/foto_9.png" alt="Fotoğraf 9" class="w-full h-full object-cover rounded-xl border-4 border-[#050505] pointer-events-none" onerror="this.parentElement.remove();">
             </div>
 
         </div>
     </div>
 
-    <div class="relative pl-10">
+    <div class="relative pl-8 md:pl-10 ml-4 md:ml-0">
 
         <div class="absolute left-0 top-2 bottom-0 w-[2px] bg-gradient-to-b from-cyan-400 via-purple-500 to-transparent opacity-60"></div>
 
         <div class="relative mb-16">
-            <div class="absolute left-[-45px] top-2 w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.9)] ring-4 ring-[#050505]"></div>
+            <div class="absolute left-[-37px] md:left-[-45px] top-2 w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.9)] ring-4 ring-[#050505]"></div>
 
             <div class="flex items-center gap-3 mb-6">
                 <svg class="w-7 h-7 text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -72,8 +83,8 @@
                 <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight" data-tr="GENEL" data-en="GENERAL">GENEL</h2>
             </div>
 
-            <div class="bg-cyan-950/20 border border-cyan-800/50 rounded-xl p-6 backdrop-blur-sm hover:border-cyan-400/50 hover:bg-cyan-900/30 transition-all duration-300 group">
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-4">
+            <div class="bg-cyan-950/20 border border-cyan-800/50 rounded-xl p-5 md:p-6 backdrop-blur-sm hover:border-cyan-400/50 hover:bg-cyan-900/30 transition-all duration-300 group">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-4">
                     <div>
                         <h3 class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1 group-hover:text-cyan-400 transition" data-tr="Ad / Soyad" data-en="Name / Surname">Ad / Soyad</h3>
                         <p class="text-slate-200 font-medium">Salih Gündüz</p>
@@ -117,7 +128,7 @@
         </div>
 
         <div class="relative mb-16">
-            <div class="absolute left-[-45px] top-2 w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.9)] ring-4 ring-[#050505]"></div>
+            <div class="absolute left-[-37px] md:left-[-45px] top-2 w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.9)] ring-4 ring-[#050505]"></div>
 
             <div class="flex items-center gap-3 mb-8">
                 <svg class="w-8 h-8 text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -157,11 +168,11 @@
                 </div>
             </div>
 
-            <div class="bg-cyan-950/20 border border-cyan-800/50 rounded-xl p-6 backdrop-blur-sm hover:border-cyan-400/50 hover:bg-cyan-900/30 transition-all duration-300 group">
+            <div class="bg-cyan-950/20 border border-cyan-800/50 rounded-xl p-5 md:p-6 backdrop-blur-sm hover:border-cyan-400/50 hover:bg-cyan-900/30 transition-all duration-300 group">
                 <div class="flex flex-col md:flex-row justify-between md:items-start mb-4 gap-3">
                     <div>
-                        <h3 class="text-xl font-bold text-white group-hover:text-cyan-100 transition" data-tr="İzmir Demokrasi Üniversitesi" data-en="Izmir Democracy University">İzmir Demokrasi Üniversitesi</h3>
-                        <p class="text-cyan-400 font-medium mt-1" data-tr="Elektrik - Elektronik Mühendisliği (4. Sınıf)" data-en="Electrical & Electronics Engineering (4th Year)">Elektrik - Elektronik Mühendisliği (4. Sınıf)</p>
+                        <h3 class="text-lg md:text-xl font-bold text-white group-hover:text-cyan-100 transition" data-tr="İzmir Demokrasi Üniversitesi" data-en="Izmir Democracy University">İzmir Demokrasi Üniversitesi</h3>
+                        <p class="text-cyan-400 text-sm md:text-base font-medium mt-1" data-tr="Elektrik - Elektronik Mühendisliği (4. Sınıf)" data-en="Electrical & Electronics Engineering (4th Year)">Elektrik - Elektronik Mühendisliği (4. Sınıf)</p>
                     </div>
                     <div class="flex flex-wrap gap-2">
                         <span class="text-cyan-300 text-xs md:text-sm font-mono bg-cyan-900/30 px-3 py-1.5 rounded-md border border-cyan-700/50 shadow-[0_0_8px_rgba(6,182,212,0.2)] backdrop-blur-sm flex items-center" data-tr="2022 - Devam Ediyor" data-en="2022 - Present">
@@ -172,14 +183,14 @@
                         </span>
                     </div>
                 </div>
-                <p class="text-slate-400 text-sm leading-relaxed" data-tr="Lisans dönemimde aldığım elektronik ve yazılım temelli eğitimler ile kendimi yetiştirdim. Elde ettiğim bilgi birikimimi projeler ile pratiğe dökerek kalıcı kazanımlar elde ettim." data-en="I trained myself with the electronics and software-based education I received during my undergraduate period. I gained permanent achievements by putting my knowledge into practice with projects.">
+                <p class="text-slate-400 text-sm md:text-base leading-relaxed" data-tr="Lisans dönemimde aldığım elektronik ve yazılım temelli eğitimler ile kendimi yetiştirdim. Elde ettiğim bilgi birikimimi projeler ile pratiğe dökerek kalıcı kazanımlar elde ettim." data-en="I trained myself with the electronics and software-based education I received during my undergraduate period. I gained permanent achievements by putting my knowledge into practice with projects.">
                     Lisans dönemimde aldığım elektronik ve yazılım temelli eğitimler ile kendimi yetiştirdim. Elde ettiğim bilgi birikimimi projeler ile pratiğe dökerek kalıcı kazanımlar elde ettim.
                 </p>
             </div>
         </div>
 
         <div class="relative mb-12">
-            <div class="absolute left-[-45px] top-2 w-3 h-3 rounded-full bg-purple-500 shadow-[0_0_12px_rgba(168,85,247,0.9)] ring-4 ring-[#050505]"></div>
+            <div class="absolute left-[-37px] md:left-[-45px] top-2 w-3 h-3 rounded-full bg-purple-500 shadow-[0_0_12px_rgba(168,85,247,0.9)] ring-4 ring-[#050505]"></div>
 
             <div class="flex items-center gap-3 mb-6">
                 <svg class="w-7 h-7 text-purple-400 drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -188,7 +199,7 @@
                 <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight" data-tr="GÜNÜMÜZ" data-en="PRESENT">GÜNÜMÜZ</h2>
             </div>
 
-            <div class="bg-purple-950/10 border border-purple-800/40 rounded-xl p-6 backdrop-blur-sm hover:border-purple-500/50 transition-all duration-300">
+            <div class="bg-purple-950/10 border border-purple-800/40 rounded-xl p-5 md:p-6 backdrop-blur-sm hover:border-purple-500/50 transition-all duration-300">
                 <p class="text-slate-300 text-sm md:text-base leading-relaxed mb-6" data-tr="Bugün, mühendislik yolculuğumda teorik birikimimi pratik alanlarla harmanlayarak kendimi sürekli geliştiriyorum. Özellikle aviyonik sistemler, yapay zeka, veri analizi, gömülü sistemler ve PCB tasarımı alanlarında yoğunlaşmış durumdayım. Donanım ve yazılımın kesiştiği bu kritik disiplinlerde katma değer üreten projeler hayata geçirmeyi, kariyerimi bu heyecan verici ve yenilikçi alanlarda şekillendirmeyi hedefliyorum." data-en="Today, I am constantly improving myself by blending my theoretical knowledge with practical areas in my engineering journey. I am particularly focused on avionics systems, artificial intelligence, data analysis, embedded systems, and PCB design. I aim to implement value-added projects in these critical disciplines where hardware and software intersect, and shape my career in these exciting and innovative fields.">
                     Bugün, mühendislik yolculuğumda teorik birikimimi pratik alanlarla harmanlayarak kendimi sürekli geliştiriyorum. Özellikle aviyonik sistemler, yapay zeka, veri analizi, gömülü sistemler ve PCB tasarımı alanlarında yoğunlaşmış durumdayım. Donanım ve yazılımın kesiştiği bu kritik disiplinlerde katma değer üreten projeler hayata geçirmeyi, kariyerimi bu heyecan verici ve yenilikçi alanlarda şekillendirmeyi hedefliyorum.
                 </p>
@@ -205,15 +216,15 @@
         </div>
 
         <div class="relative pb-4">
-            <div class="absolute left-[-45px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-cyan-500 bg-[#050505]"></div>
+            <div class="absolute left-[-37px] md:left-[-45px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-cyan-500 bg-[#050505]"></div>
 
-            <div class="bg-purple-950/20 border border-purple-800/50 rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 backdrop-blur-sm hover:border-purple-400/50 transition-all duration-300 group">
+            <div class="bg-purple-950/20 border border-purple-800/50 rounded-xl p-5 md:p-6 flex flex-col md:flex-row items-center justify-between gap-6 backdrop-blur-sm hover:border-purple-400/50 transition-all duration-300 group">
                 <div class="text-center md:text-left flex-1">
                     <h3 class="text-lg font-bold text-white mb-2" data-tr="Detaylı Özgeçmişim" data-en="My Detailed Resume">Detaylı Özgeçmişim</h3>
                     <p class="text-slate-400 text-sm leading-relaxed" data-tr="Özet eğitim geçmişimi, bitirdiğim projelerimi ve iş deneyimlerimi içeren PDF formatındaki CV'mi indirebilir ve inceleyebilirsiniz." data-en="You can download and review my CV in PDF format, which includes my summary educational background, completed projects, and work experiences.">Özet eğitim geçmişimi, bitirdiğim projelerimi ve iş deneyimlerimi içeren PDF formatındaki CV'mi indirebilir ve inceleyebilirsiniz.</p>
                 </div>
 
-                <div class="shrink-0 flex flex-col sm:flex-row items-center gap-3">
+                <div class="w-full md:w-auto shrink-0 flex flex-col sm:flex-row items-center gap-3">
                     <a href="pdfs/CV_T.pdf" download class="w-full sm:w-auto flex items-center justify-center gap-2 bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-5 py-2.5 rounded-xl font-bold transition-all shadow-[0_0_15px_rgba(6,182,212,0.3)] hover:shadow-[0_0_20px_rgba(6,182,212,0.5)] hover:-translate-y-0.5">
                         <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
@@ -235,7 +246,7 @@
 </div>
 
 <script>
-    // 1. KESİN ÇÖZÜM: Modal Açma Fonksiyonu
+    // Modal Açma Fonksiyonu
     function openModal(src) {
         const modal = document.getElementById('imageModal');
         const modalImg = document.getElementById('modalImg');
@@ -244,7 +255,7 @@
 
         modalImg.src = src;
 
-        // Görünürlüğü aç (Garanti z-index eklendi)
+        // Görünürlüğü aç
         modal.style.opacity = '1';
         modal.style.pointerEvents = 'auto';
 
@@ -253,7 +264,7 @@
         }, 10);
     }
 
-    // 2. KESİN ÇÖZÜM: Modal Kapatma Fonksiyonu
+    // Modal Kapatma Fonksiyonu
     function closeModal() {
         const modal = document.getElementById('imageModal');
         const modalImg = document.getElementById('modalImg');
@@ -278,19 +289,16 @@
         if(e.key === 'Escape') closeModal();
     });
 
-    // 3. Tıklama Kontrolü: Ortadaysa Büyüt, Yandaysa Merkeze Çek
+    // Tıklama Kontrolü: Ortadaysa Büyüt, Yandaysa Merkeze Çek
     function handleGalleryClick(element) {
-        // Doğrudan CSS sınıfını kontrol eder. Tailwind class'ı kesin ordadır.
         if (element.classList.contains('active-center')) {
-            // Sınıf varsa (yani resim merkezde ve netse) Modal'ı aç!
             openModal(element.querySelector('img').src);
         } else {
-            // Bulanık olana (yandakilere) tıkladıysa merkeze çek
             element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         }
     }
 
-    // 4. Galerinin Başlatılması ve 2. Fotoğrafa Geçiş
+    // Galerinin Başlatılması ve 2. Fotoğrafa Geçiş
     document.addEventListener("DOMContentLoaded", () => {
         const container = document.querySelector('.gallery-container');
         if(!container) return;

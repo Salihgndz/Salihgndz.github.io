@@ -1,35 +1,59 @@
-<div class="relative pl-10 pr-4 w-full mx-auto">
+<style>
+    /* ... (Diğer CSS kuralları aynı kalıyor) ... */
+
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* İOS Safari Kaydırma ve Esneklik Düzeltmeleri */
+    .gallery-container {
+        scroll-behavior: smooth;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch; /* İOS'ta parmakla kaydırmayı pürüzsüz yapar */
+    }
+
+    .gallery-item, .gallery-item img {
+        flex-shrink: 0 !important;
+        -webkit-flex-shrink: 0 !important; /* İOS'un resimleri büzüştürmesini kesin engeller */
+    }
+
+    /* Mavi seçimi engellemek için */
+    .no-select {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    /* Blur ve Netleşme Efekt Sınıfları */
+    .gallery-item { transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+    .blurred-item { filter: blur(5px); opacity: 0.4; transform: scale(0.92); }
+    .active-center { filter: blur(0); opacity: 1; transform: scale(1); cursor: zoom-in; box-shadow: 0 0 25px rgba(6,182,212,0.3); }
+
+    /* YENİ EKLENEN KURAL: Eğer galeride tek resim kalırsa tam ortaya hizala */
+    .gallery-item:only-child { margin: 0 auto; }
+
+    .zoomable-img { cursor: zoom-in; }
+</style>
+
+<div class="relative pl-8 md:pl-10 pr-4 ml-4 md:ml-0 w-full mx-auto">
     <div class="absolute left-0 top-0 bottom-0 w-[2px] bg-gradient-to-b from-purple-500 via-cyan-400 to-transparent"></div>
 
-    <style>
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .gallery-container { scroll-behavior: smooth; scroll-snap-type: x mandatory; }
-
-        /* Blur ve Netleşme Efekt Sınıfları */
-        .gallery-item { transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
-        .blurred-item { filter: blur(5px); opacity: 0.4; transform: scale(0.92); }
-        .active-center { filter: blur(0); opacity: 1; transform: scale(1); cursor: zoom-in; box-shadow: 0 0 25px rgba(6,182,212,0.3); }
-
-        /* YENİ EKLENEN KURAL: Eğer galeride tek resim kalırsa tam ortaya hizala */
-        .gallery-item:only-child { margin: 0 auto; }
-
-        .zoomable-img { cursor: zoom-in; }
-    </style>
-
     <div class="relative mb-20">
-        <div class="absolute left-[-45px] top-2 w-3 h-3 rounded-full bg-purple-500 ring-4 ring-[#050505] shadow-[0_0_10px_rgba(168,85,247,0.8)]"></div>
+        <!-- Nokta hizalaması mobilde pl-8'e göre uyarlandı -->
+        <div class="absolute left-[-37px] md:left-[-45px] top-2 w-3 h-3 rounded-full bg-purple-500 ring-4 ring-[#050505] shadow-[0_0_10px_rgba(168,85,247,0.8)]"></div>
 
         <h2 class="text-2xl font-bold text-purple-400 mb-8 flex items-center gap-3">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
             <span data-tr="SERTİFİKALAR" data-en="CERTIFICATES">SERTİFİKALAR</span>
         </h2>
 
+        <!-- Mobilde 1, Tablette 2, Bilgisayarda 4 sütun -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-
+            <!-- SERTİFİKA KARTLARI -->
             <div class="bg-purple-950/10 border border-purple-500/30 backdrop-blur-sm rounded-2xl p-5 hover:border-purple-400/60 transition-all duration-300 group flex flex-col h-full">
-                <div class="w-full aspect-[4/3] bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
-                    <img src="jpegs/sertifika_1.jpg" alt="Sertifika 1" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img" onclick="openImageModal(this.src)">
+                <!-- flex-shrink-0 eklendi -->
+                <div class="w-full aspect-[4/3] shrink-0 bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
+                    <img src="jpegs/sertifika_1.jpg" alt="Sertifika 1" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img shrink-0" onclick="openImageModal(this.src)">
                 </div>
                 <h3 class="text-lg font-bold text-white mb-3" data-tr="VHDL ile FPGA Programlama" data-en="FPGA Programming with VHDL">VHDL ile FPGA Programlama</h3>
                 <div class="flex flex-col gap-2 text-sm text-slate-400 mb-6 flex-grow">
@@ -42,8 +66,9 @@
             </div>
 
             <div class="bg-purple-950/10 border border-purple-500/30 backdrop-blur-sm rounded-2xl p-5 hover:border-purple-400/60 transition-all duration-300 group flex flex-col h-full">
-                <div class="w-full aspect-[4/3] bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
-                    <img src="jpegs/sertifika_2.jpg" alt="Sertifika 2" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img" onclick="openImageModal(this.src)">
+                <!-- flex-shrink-0 eklendi -->
+                <div class="w-full aspect-[4/3] shrink-0 bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
+                    <img src="jpegs/sertifika_2.jpg" alt="Sertifika 2" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img shrink-0" onclick="openImageModal(this.src)">
                 </div>
                 <h3 class="text-lg font-bold text-white mb-3" data-tr="LIFT UP" data-en="LIFT UP">LIFT UP</h3>
                 <div class="flex flex-col gap-2 text-sm text-slate-400 mb-6 flex-grow">
@@ -56,8 +81,9 @@
             </div>
 
             <div class="bg-purple-950/10 border border-purple-500/30 backdrop-blur-sm rounded-2xl p-5 hover:border-purple-400/60 transition-all duration-300 group flex flex-col h-full">
-                <div class="w-full aspect-[4/3] bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
-                    <img src="jpegs/sertifika_3.jpg" alt="Sertifika 3" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img" onclick="openImageModal(this.src)">
+                <!-- flex-shrink-0 eklendi -->
+                <div class="w-full aspect-[4/3] shrink-0 bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
+                    <img src="jpegs/sertifika_3.jpg" alt="Sertifika 3" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img shrink-0" onclick="openImageModal(this.src)">
                 </div>
                 <h3 class="text-lg font-bold text-white mb-3" data-tr="Havacılık Motorları Okulu" data-en="Aviation Engines School">Havacılık Motorları Okulu</h3>
                 <div class="flex flex-col gap-2 text-sm text-slate-400 mb-6 flex-grow">
@@ -70,8 +96,9 @@
             </div>
 
             <div class="bg-purple-950/10 border border-purple-500/30 backdrop-blur-sm rounded-2xl p-5 hover:border-purple-400/60 transition-all duration-300 group flex flex-col h-full">
-                <div class="w-full aspect-[4/3] bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
-                    <img src="jpegs/sertifika_4.jpg" alt="Sertifika 4" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img" onclick="openImageModal(this.src)">
+                <!-- flex-shrink-0 eklendi -->
+                <div class="w-full aspect-[4/3] shrink-0 bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
+                    <img src="jpegs/sertifika_4.jpg" alt="Sertifika 4" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img shrink-0" onclick="openImageModal(this.src)">
                 </div>
                 <h3 class="text-lg font-bold text-white mb-3" data-tr="Kariyer ve Yetkinlik Buluşmaları" data-en="Career and Competency Meetings">Kariyer ve Yetkinlik Buluşmaları</h3>
                 <div class="flex flex-col gap-2 text-sm text-slate-400 mb-6 flex-grow">
@@ -84,8 +111,9 @@
             </div>
 
             <div class="bg-purple-950/10 border border-purple-500/30 backdrop-blur-sm rounded-2xl p-5 hover:border-purple-400/60 transition-all duration-300 group flex flex-col h-full">
-                <div class="w-full aspect-[4/3] bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
-                    <img src="jpegs/sertifika_5.jpg" alt="Sertifika 5" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img" onclick="openImageModal(this.src)">
+                <!-- flex-shrink-0 eklendi -->
+                <div class="w-full aspect-[4/3] shrink-0 bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
+                    <img src="jpegs/sertifika_5.jpg" alt="Sertifika 5" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img shrink-0" onclick="openImageModal(this.src)">
                 </div>
                 <h3 class="text-lg font-bold text-white mb-3" data-tr="C# ile Algoritma ve Programlama" data-en="Algorithms and Programming with C#">C# ile Algoritma ve Programlama</h3>
                 <div class="flex flex-col gap-2 text-sm text-slate-400 mb-6 flex-grow">
@@ -98,8 +126,9 @@
             </div>
 
             <div class="bg-purple-950/10 border border-purple-500/30 backdrop-blur-sm rounded-2xl p-5 hover:border-purple-400/60 transition-all duration-300 group flex flex-col h-full">
-                <div class="w-full aspect-[4/3] bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
-                    <img src="jpegs/sertifika_6.jpg" alt="Sertifika 6" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img" onclick="openImageModal(this.src)">
+                <!-- flex-shrink-0 eklendi -->
+                <div class="w-full aspect-[4/3] shrink-0 bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
+                    <img src="jpegs/sertifika_6.jpg" alt="Sertifika 6" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img shrink-0" onclick="openImageModal(this.src)">
                 </div>
                 <h3 class="text-lg font-bold text-white mb-3" data-tr="Bilgisayar Destekli 3D Tasarım" data-en="Computer-Aided 3D Design">Bilgisayar Destekli 3D Tasarım</h3>
                 <div class="flex flex-col gap-2 text-sm text-slate-400 mb-6 flex-grow">
@@ -112,8 +141,9 @@
             </div>
 
             <div class="bg-purple-950/10 border border-purple-500/30 backdrop-blur-sm rounded-2xl p-5 hover:border-purple-400/60 transition-all duration-300 group flex flex-col h-full">
-                <div class="w-full aspect-[4/3] bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
-                    <img src="jpegs/sertifika_7.jpg" alt="Sertifika 7" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img" onclick="openImageModal(this.src)">
+                <!-- flex-shrink-0 eklendi -->
+                <div class="w-full aspect-[4/3] shrink-0 bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
+                    <img src="jpegs/sertifika_7.jpg" alt="Sertifika 7" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img shrink-0" onclick="openImageModal(this.src)">
                 </div>
                 <h3 class="text-lg font-bold text-white mb-3" data-tr="3D Yazıcı Operatörlüğü" data-en="3D Printer Operator">3D Yazıcı Operatörlüğü</h3>
                 <div class="flex flex-col gap-2 text-sm text-slate-400 mb-6 flex-grow">
@@ -126,8 +156,9 @@
             </div>
 
             <div class="bg-purple-950/10 border border-purple-500/30 backdrop-blur-sm rounded-2xl p-5 hover:border-purple-400/60 transition-all duration-300 group flex flex-col h-full">
-                <div class="w-full aspect-[4/3] bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
-                    <img src="jpegs/sertifika_8.jpg" alt="Sertifika 8" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img" onclick="openImageModal(this.src)">
+                <!-- flex-shrink-0 eklendi -->
+                <div class="w-full aspect-[4/3] shrink-0 bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
+                    <img src="jpegs/sertifika_8.jpg" alt="Sertifika 8" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img shrink-0" onclick="openImageModal(this.src)">
                 </div>
                 <h3 class="text-lg font-bold text-white mb-3" data-tr="Kompozit Ürün Üretimi" data-en="Composite Product Manufacturing">Kompozit Ürün Üretimi</h3>
                 <div class="flex flex-col gap-2 text-sm text-slate-400 mb-6 flex-grow">
@@ -140,8 +171,9 @@
             </div>
 
             <div class="bg-purple-950/10 border border-purple-500/30 backdrop-blur-sm rounded-2xl p-5 hover:border-purple-400/60 transition-all duration-300 group flex flex-col h-full">
-                <div class="w-full aspect-[4/3] bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
-                    <img src="jpegs/sertifika_9.jpg" alt="Sertifika 9" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img" onclick="openImageModal(this.src)">
+                <!-- flex-shrink-0 eklendi -->
+                <div class="w-full aspect-[4/3] shrink-0 bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
+                    <img src="jpegs/sertifika_9.jpg" alt="Sertifika 9" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img shrink-0" onclick="openImageModal(this.src)">
                 </div>
                 <h3 class="text-lg font-bold text-white mb-3" data-tr="Sac Metal Parça ve Kalıp Tasarımı" data-en="Sheet Metal Part and Mold Design">Sac Metal Parça ve Kalıp Tasarımı</h3>
                 <div class="flex flex-col gap-2 text-sm text-slate-400 mb-6 flex-grow">
@@ -154,8 +186,9 @@
             </div>
 
             <div class="bg-purple-950/10 border border-purple-500/30 backdrop-blur-sm rounded-2xl p-5 hover:border-purple-400/60 transition-all duration-300 group flex flex-col h-full">
-                <div class="w-full aspect-[4/3] bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
-                    <img src="jpegs/sertifika_10.jpg" alt="Sertifika 10" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img" onclick="openImageModal(this.src)">
+                <!-- flex-shrink-0 eklendi -->
+                <div class="w-full aspect-[4/3] shrink-0 bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
+                    <img src="jpegs/sertifika_10.jpg" alt="Sertifika 10" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img shrink-0" onclick="openImageModal(this.src)">
                 </div>
                 <h3 class="text-lg font-bold text-white mb-3" data-tr="LinkedIn'de Etkili Profil Oluşturma" data-en="Effective LinkedIn Profile Creation">LinkedIn'de Etkili Profil Oluşturma</h3>
                 <div class="flex flex-col gap-2 text-sm text-slate-400 mb-6 flex-grow">
@@ -168,8 +201,9 @@
             </div>
 
             <div class="bg-purple-950/10 border border-purple-500/30 backdrop-blur-sm rounded-2xl p-5 hover:border-purple-400/60 transition-all duration-300 group flex flex-col h-full">
-                <div class="w-full aspect-[4/3] bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
-                    <img src="jpegs/sertifika_11.jpg" alt="Sertifika 11" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img" onclick="openImageModal(this.src)">
+                <!-- flex-shrink-0 eklendi -->
+                <div class="w-full aspect-[4/3] shrink-0 bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
+                    <img src="jpegs/sertifika_11.jpg" alt="Sertifika 11" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img shrink-0" onclick="openImageModal(this.src)">
                 </div>
                 <h3 class="text-lg font-bold text-white mb-3" data-tr="İHA Pilot Sertifikası" data-en="UAV Pilot Certificate">İHA Ehliyeti</h3>
                 <div class="flex flex-col gap-2 text-sm text-slate-400 mb-6 flex-grow">
@@ -182,8 +216,9 @@
             </div>
 
             <div class="bg-purple-950/10 border border-purple-500/30 backdrop-blur-sm rounded-2xl p-5 hover:border-purple-400/60 transition-all duration-300 group flex flex-col h-full">
-                <div class="w-full aspect-[4/3] bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
-                    <img src="jpegs/sertifika_12.png" alt="Sertifika 12" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img" onclick="openImageModal(this.src)">
+                <!-- flex-shrink-0 eklendi -->
+                <div class="w-full aspect-[4/3] shrink-0 bg-[#0a0a0a] rounded-xl overflow-hidden mb-5 border border-purple-800/40 relative">
+                    <img src="jpegs/sertifika_12.png" alt="Sertifika 12" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 zoomable-img shrink-0" onclick="openImageModal(this.src)">
                 </div>
                 <h3 class="text-lg font-bold text-white mb-3" data-tr="TUSAŞ Staj Bitirme Sertifikası" data-en="TUSAŞ Internship Completion Certificate">TUSAŞ Staj Katılım</h3>
                 <div class="flex flex-col gap-2 text-sm text-slate-400 mb-6 flex-grow">
@@ -198,41 +233,45 @@
         </div>
     </div>
 
+    <!-- ETKİNLİKLER BÖLÜMÜ -->
     <div class="relative">
-        <div class="absolute left-[-45px] top-2 w-3 h-3 rounded-full bg-cyan-400 ring-4 ring-[#050505] shadow-[0_0_10px_rgba(6,182,212,0.8)]"></div>
+        <div class="absolute left-[-37px] md:left-[-45px] top-2 w-3 h-3 rounded-full bg-cyan-400 ring-4 ring-[#050505] shadow-[0_0_10px_rgba(6,182,212,0.8)]"></div>
 
         <h2 class="text-2xl font-bold text-cyan-400 mb-8 flex items-center gap-3">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path></svg>
             <span data-tr="ETKİNLİKLER" data-en="EVENTS">ETKİNLİKLER</span>
         </h2>
 
+        <!-- Mobilde 1 Sütun, Bilgisayarda 2 Sütun -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- ETKİNLİK KARTLARI -->
 
             <div class="bg-cyan-950/10 border border-cyan-800/40 backdrop-blur-sm rounded-2xl p-6 md:p-8 hover:border-cyan-500/50 transition-all duration-300 w-full flex flex-col h-full">
                 <div class="w-full mb-6 relative">
                     <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[15%]">
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_1_foto_1.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <!-- shrink-0 eklendi -->
+                            <img src="jpegs/etkinlik_1_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_1_foto_2.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_1_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_1_foto_3.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_1_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_1_foto_4.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_1_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_1_foto_5.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_1_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_1_foto_6.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_1_foto_6.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                     </div>
                 </div>
                 <h3 class="text-xl md:text-2xl font-bold text-white mb-6" data-tr="Faz-Kontrast Optik Mikroskop Zaman Serisi Görüntülerinin Çözümlenmesi" data-en="Analysis of Phase-Contrast Optical Microscope Time Series Images">Faz-Kontrast Optik Mikroskop Zaman Serisi Görüntülerinin Çözümlenmesi</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-stretch">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 items-stretch">
                     <div class="bg-cyan-950/30 border border-cyan-900/50 rounded-xl p-4 flex flex-col justify-start h-full">
                         <span class="text-[10px] font-bold text-cyan-500 mb-1 tracking-wider" data-tr="DÜZENLEYEN" data-en="ORGANIZER">DÜZENLEYEN</span>
                         <span class="text-sm font-medium text-cyan-50" data-tr="TÜBİTAK - İzmir Demokrasi Üniversitesi" data-en="TUBITAK - Izmir Democracy University">TÜBİTAK - İzmir Demokrasi Üniversitesi</span>
@@ -256,27 +295,28 @@
                 <div class="w-full mb-6 relative">
                     <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[15%]">
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_2_foto_1.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <!-- shrink-0 eklendi -->
+                            <img src="jpegs/etkinlik_2_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_2_foto_2.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_2_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_2_foto_3.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_2_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_2_foto_4.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_2_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_2_foto_5.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_2_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_2_foto_6.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_2_foto_6.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                     </div>
                 </div>
                 <h3 class="text-xl md:text-2xl font-bold text-white mb-6" data-tr="kırktaBİR Söyleşi ve TUSAŞ Teknik Gezisi" data-en="kırktaBİR Interview and TAI Technical Trip">kırktaBİR Söyleşi ve TUSAŞ Teknik Gezisi</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-stretch">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 items-stretch">
                     <div class="bg-cyan-950/30 border border-cyan-900/50 rounded-xl p-4 flex flex-col justify-start h-full">
                         <span class="text-[10px] font-bold text-cyan-500 mb-1 tracking-wider" data-tr="DÜZENLEYEN" data-en="ORGANIZER">DÜZENLEYEN</span>
                         <span class="text-sm font-medium text-cyan-50" data-tr="MMG İzmir (Mimar ve Mühendisler Grubu İzmir Şubesi) - TUSAŞ" data-en="MMG Izmir - TAI">MMG İzmir (Mimar ve Mühendisler Grubu İzmir Şubesi) - TUSAŞ</span>
@@ -300,27 +340,28 @@
                 <div class="w-full mb-6 relative">
                     <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[15%]">
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_3_foto_1.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <!-- shrink-0 eklendi -->
+                            <img src="jpegs/etkinlik_3_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_3_foto_2.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_3_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_3_foto_3.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_3_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_3_foto_4.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_3_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_3_foto_5.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_3_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_3_foto_6.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_3_foto_6.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                     </div>
                 </div>
                 <h3 class="text-xl md:text-2xl font-bold text-white mb-6" data-tr="Elektronik Harp Sistemlerinde Yazılım, Donanım, Test ve Entegrasyon Semineri" data-en="Software, Hardware, Testing and Integration in Electronic Warfare Seminar">Elektronik Harp Sistemlerinde Yazılım, Donanım, Test ve Entegrasyon Semineri</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-stretch">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 items-stretch">
                     <div class="bg-cyan-950/30 border border-cyan-900/50 rounded-xl p-4 flex flex-col justify-start h-full">
                         <span class="text-[10px] font-bold text-cyan-500 mb-1 tracking-wider" data-tr="DÜZENLEYEN" data-en="ORGANIZER">DÜZENLEYEN</span>
                         <span class="text-sm font-medium text-cyan-50" data-tr="İzmir Demokrasi Üniversitesi - EHSİM" data-en="Izmir Democracy University - EHSIM">İzmir Demokrasi Üniversitesi - EHSİM</span>
@@ -344,27 +385,28 @@
                 <div class="w-full mb-6 relative">
                     <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[15%]">
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_4_foto_1.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <!-- shrink-0 eklendi -->
+                            <img src="jpegs/etkinlik_4_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_4_foto_2.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_4_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_4_foto_3.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_4_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_4_foto_4.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_4_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_4_foto_5.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_4_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_4_foto_6.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_4_foto_6.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                     </div>
                 </div>
                 <h3 class="text-xl md:text-2xl font-bold text-white mb-6" data-tr="ZENTRA: Enerji Dönüşüm Sürecinde Mühendislik Semineri" data-en="ZENTRA: Engineering in Energy Transition Seminar">ZENTRA: Enerji Dönüşüm Sürecinde Mühendislik Semineri</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-stretch">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 items-stretch">
                     <div class="bg-cyan-950/30 border border-cyan-900/50 rounded-xl p-4 flex flex-col justify-start h-full">
                         <span class="text-[10px] font-bold text-cyan-500 mb-1 tracking-wider" data-tr="DÜZENLEYEN" data-en="ORGANIZER">DÜZENLEYEN</span>
                         <span class="text-sm font-medium text-cyan-50" data-tr="İzmir Demokrasi Üniversitesi" data-en="Izmir Democracy University">İzmir Demokrasi Üniversitesi</span>
@@ -388,27 +430,28 @@
                 <div class="w-full mb-6 relative">
                     <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[15%]">
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_5_foto_1.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <!-- shrink-0 eklendi -->
+                            <img src="jpegs/etkinlik_5_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_5_foto_2.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_5_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_5_foto_3.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_5_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_5_foto_4.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_5_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_5_foto_5.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_5_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_5_foto_6.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_5_foto_6.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                     </div>
                 </div>
                 <h3 class="text-xl md:text-2xl font-bold text-white mb-6" data-tr="Endüstride Hassas Ölçüm ve Kalibrasyon Semineri" data-en="Precision Measurement and Calibration in Industry Seminar">Endüstride Hassas Ölçüm ve Kalibrasyon Semineri</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-stretch">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 items-stretch">
                     <div class="bg-cyan-950/30 border border-cyan-900/50 rounded-xl p-4 flex flex-col justify-start h-full">
                         <span class="text-[10px] font-bold text-cyan-500 mb-1 tracking-wider" data-tr="DÜZENLEYEN" data-en="ORGANIZER">DÜZENLEYEN</span>
                         <span class="text-sm font-medium text-cyan-50" data-tr="İzmir Demokrasi Üniversitesi - Netes" data-en="IDU - Netes Engineering">İzmir Demokrasi Üniversitesi - Netes</span>
@@ -432,27 +475,28 @@
                 <div class="w-full mb-6 relative">
                     <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[15%]">
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_6_foto_1.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <!-- shrink-0 eklendi -->
+                            <img src="jpegs/etkinlik_6_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_6_foto_2.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_6_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_6_foto_3.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_6_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_6_foto_4.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_6_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_6_foto_5.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_6_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_6_foto_6.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_6_foto_6.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                     </div>
                 </div>
                 <h3 class="text-xl md:text-2xl font-bold text-white mb-6" data-tr="AEROSPHERE'24" data-en="AEROSPHERE'24">AEROSPHERE'24</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-stretch">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 items-stretch">
                     <div class="bg-cyan-950/30 border border-cyan-900/50 rounded-xl p-4 flex flex-col justify-start h-full">
                         <span class="text-[10px] font-bold text-cyan-500 mb-1 tracking-wider" data-tr="DÜZENLEYEN" data-en="ORGANIZER">DÜZENLEYEN</span>
                         <span class="text-sm font-medium text-cyan-50" data-tr="IEEE DEU Student Branch" data-en="IEEE DEU Student Branch">IEEE DEU Student Branch</span>
@@ -476,27 +520,28 @@
                 <div class="w-full mb-6 relative">
                     <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[15%]">
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_7_foto_1.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <!-- shrink-0 eklendi -->
+                            <img src="jpegs/etkinlik_7_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_7_foto_2.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_7_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_7_foto_3.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_7_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_7_foto_4.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_7_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_7_foto_5.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_7_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_7_foto_6.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_7_foto_6.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                     </div>
                 </div>
                 <h3 class="text-xl md:text-2xl font-bold text-white mb-6" data-tr="BMC Teknik Gezisi" data-en="BMC Technical Tour">BMC Teknik Gezisi</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-stretch">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 items-stretch">
                     <div class="bg-cyan-950/30 border border-cyan-900/50 rounded-xl p-4 flex flex-col justify-start h-full">
                         <span class="text-[10px] font-bold text-cyan-500 mb-1 tracking-wider" data-tr="DÜZENLEYEN" data-en="ORGANIZER">DÜZENLEYEN</span>
                         <span class="text-sm font-medium text-cyan-50" data-tr="İzmir Demokrasi Üniversitesi - BMC" data-en="IDU - BMC Automotive">İzmir Demokrasi Üniversitesi - BMC</span>
@@ -520,27 +565,28 @@
                 <div class="w-full mb-6 relative">
                     <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[15%]">
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_8_foto_1.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <!-- shrink-0 eklendi -->
+                            <img src="jpegs/etkinlik_8_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_8_foto_2.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_8_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_8_foto_3.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_8_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_8_foto_4.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_8_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_8_foto_5.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_8_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_8_foto_6.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_8_foto_6.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                     </div>
                 </div>
                 <h3 class="text-xl md:text-2xl font-bold text-white mb-6" data-tr="CIGRE NEXUS" data-en="CIGRE NEXUS">CIGRE NEXUS</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-stretch">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 items-stretch">
                     <div class="bg-cyan-950/30 border border-cyan-900/50 rounded-xl p-4 flex flex-col justify-start h-full">
                         <span class="text-[10px] font-bold text-cyan-500 mb-1 tracking-wider" data-tr="DÜZENLEYEN" data-en="ORGANIZER">DÜZENLEYEN</span>
                         <span class="text-sm font-medium text-cyan-50" data-tr="CIGRE MCBU Student Branch & ÜNİDES" data-en="CIGRE MCBU Student Branch & UNIDES">CIGRE MCBU Student Branch & ÜNİDES</span>
@@ -564,27 +610,28 @@
                 <div class="w-full mb-6 relative">
                     <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[15%]">
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_9_foto_1.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <!-- shrink-0 eklendi -->
+                            <img src="jpegs/etkinlik_9_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_9_foto_2.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_9_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_9_foto_3.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_9_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_9_foto_4.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_9_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_9_foto_5.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_9_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_9_foto_6.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_9_foto_6.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                     </div>
                 </div>
                 <h3 class="text-xl md:text-2xl font-bold text-white mb-6" data-tr="Google DSC Etkinlikleri" data-en="Google DSC Events">Google DSC Etkinlikleri</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-stretch">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 items-stretch">
                     <div class="bg-cyan-950/30 border border-cyan-900/50 rounded-xl p-4 flex flex-col justify-start h-full">
                         <span class="text-[10px] font-bold text-cyan-500 mb-1 tracking-wider" data-tr="DÜZENLEYEN" data-en="ORGANIZER">DÜZENLEYEN</span>
                         <span class="text-sm font-medium text-cyan-50" data-tr="Google DSC IDU" data-en="Google DSC IDU">Google DSC IDU</span>
@@ -608,27 +655,28 @@
                 <div class="w-full mb-6 relative">
                     <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[15%]">
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_10_foto_1.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <!-- shrink-0 eklendi -->
+                            <img src="jpegs/etkinlik_10_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_10_foto_2.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_10_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_10_foto_3.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_10_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_10_foto_4.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_10_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_10_foto_5.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_10_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_10_foto_6.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_10_foto_6.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                     </div>
                 </div>
                 <h3 class="text-xl md:text-2xl font-bold text-white mb-6" data-tr="TicaretMektebi & FinTech Ideathon" data-en="TicaretMektebi & FinTech Ideathon">TicaretMektebi & FinTech Ideathon</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-stretch">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 items-stretch">
                     <div class="bg-cyan-950/30 border border-cyan-900/50 rounded-xl p-4 flex flex-col justify-start h-full">
                         <span class="text-[10px] font-bold text-cyan-500 mb-1 tracking-wider" data-tr="DÜZENLEYEN" data-en="ORGANIZER">DÜZENLEYEN</span>
                         <span class="text-sm font-medium text-cyan-50" data-tr="İstanbul/MÜSİAD & Anadolu Ajansı" data-en="Istanbul/MUSIAD & Anadolu Agency">MÜSİAD & Anadolu Ajansı</span>
@@ -652,27 +700,28 @@
                 <div class="w-full mb-6 relative">
                     <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[15%]">
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_11_foto_1.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <!-- shrink-0 eklendi -->
+                            <img src="jpegs/etkinlik_11_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_11_foto_2.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_11_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_11_foto_3.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_11_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_11_foto_4.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_11_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_11_foto_5.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_11_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_11_foto_6.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_11_foto_6.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                     </div>
                 </div>
                 <h3 class="text-xl md:text-2xl font-bold text-white mb-6" data-tr="SAHA EXPO 2026" data-en="SAHA EXPO 2026">SAHA EXPO 2026</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-stretch">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 items-stretch">
                     <div class="bg-cyan-950/30 border border-cyan-900/50 rounded-xl p-4 flex flex-col justify-start h-full">
                         <span class="text-[10px] font-bold text-cyan-500 mb-1 tracking-wider" data-tr="DÜZENLEYEN" data-en="ORGANIZER">DÜZENLEYEN</span>
                         <span class="text-sm font-medium text-cyan-50" data-tr="SAHA İstanbul" data-en="SAHA Istanbul">SAHA İstanbul</span>
@@ -696,27 +745,28 @@
                 <div class="w-full mb-6 relative">
                     <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[15%]">
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_12_foto_1.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <!-- shrink-0 eklendi -->
+                            <img src="jpegs/etkinlik_12_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_12_foto_2.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_12_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_12_foto_3.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_12_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_12_foto_4.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_12_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_12_foto_5.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_12_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_12_foto_6.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_12_foto_6.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                     </div>
                 </div>
                 <h3 class="text-xl md:text-2xl font-bold text-white mb-6" data-tr="SUPPLY CHAIN CAMP" data-en="SUPPLY CHAIN CAMP">SUPPLY CHAIN CAMP</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-stretch">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 items-stretch">
                     <div class="bg-cyan-950/30 border border-cyan-900/50 rounded-xl p-4 flex flex-col justify-start h-full">
                         <span class="text-[10px] font-bold text-cyan-500 mb-1 tracking-wider" data-tr="DÜZENLEYEN" data-en="ORGANIZER">DÜZENLEYEN</span>
                         <span class="text-sm font-medium text-cyan-50" data-tr="YTÜ Quality and Productivity Club" data-en="YTU Quality and Productivity Club">YTÜ Quality and Productivity Club</span>
@@ -740,27 +790,28 @@
                 <div class="w-full mb-6 relative">
                     <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[15%]">
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_13_foto_1.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <!-- shrink-0 eklendi -->
+                            <img src="jpegs/etkinlik_13_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_13_foto_2.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_13_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_13_foto_3.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_13_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_13_foto_4.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_13_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_13_foto_5.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_13_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_13_foto_6.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_13_foto_6.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                     </div>
                 </div>
                 <h3 class="text-xl md:text-2xl font-bold text-white mb-6" data-tr="DevFest 2022 İzmir" data-en="DevFest 2022 Izmir">DevFest 2022 İzmir</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-stretch">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 items-stretch">
                     <div class="bg-cyan-950/30 border border-cyan-900/50 rounded-xl p-4 flex flex-col justify-start h-full">
                         <span class="text-[10px] font-bold text-cyan-500 mb-1 tracking-wider" data-tr="DÜZENLEYEN" data-en="ORGANIZER">DÜZENLEYEN</span>
                         <span class="text-sm font-medium text-cyan-50" data-tr="Google Developer Groups" data-en="Google Developer Groups">Google Developer Groups</span>
@@ -784,27 +835,28 @@
                 <div class="w-full mb-6 relative">
                     <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[15%]">
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_14_foto_1.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <!-- shrink-0 eklendi -->
+                            <img src="jpegs/etkinlik_14_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_14_foto_2.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_14_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_14_foto_3.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_14_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_14_foto_4.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_14_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_14_foto_5.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_14_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_14_foto_6.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_14_foto_6.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                     </div>
                 </div>
                 <h3 class="text-xl md:text-2xl font-bold text-white mb-6" data-tr="Gençliğin Potansiyel Patikası" data-en="Youth's Potential Path">Gençliğin Potansiyel Patikası</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-stretch">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 items-stretch">
                     <div class="bg-cyan-950/30 border border-cyan-900/50 rounded-xl p-4 flex flex-col justify-start h-full">
                         <span class="text-[10px] font-bold text-cyan-500 mb-1 tracking-wider" data-tr="DÜZENLEYEN" data-en="ORGANIZER">DÜZENLEYEN</span>
                         <span class="text-sm font-medium text-cyan-50" data-tr="İzQ Genç & Google DSC IDU" data-en="IzQ Genc & Google DSC IDU">İzQ Genç & Google DSC IDU</span>
@@ -828,27 +880,28 @@
                 <div class="w-full mb-6 relative">
                     <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[15%]">
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_15_foto_1.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <!-- shrink-0 eklendi -->
+                            <img src="jpegs/etkinlik_15_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_15_foto_2.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_15_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_15_foto_3.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_15_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_15_foto_4.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_15_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_15_foto_5.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_15_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_15_foto_6.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_15_foto_6.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                     </div>
                 </div>
                 <h3 class="text-xl md:text-2xl font-bold text-white mb-6" data-tr="Alp Havacılık Teknik Gezisi" data-en="Alp Aviation Technical Tour">Alp Havacılık Teknik Gezisi</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-stretch">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 items-stretch">
                     <div class="bg-cyan-950/30 border border-cyan-900/50 rounded-xl p-4 flex flex-col justify-start h-full">
                         <span class="text-[10px] font-bold text-cyan-500 mb-1 tracking-wider" data-tr="DÜZENLEYEN" data-en="ORGANIZER">DÜZENLEYEN</span>
                         <span class="text-sm font-medium text-cyan-50" data-tr="Alp Havacılık" data-en="Alp Aviation">Alp Havacılık</span>
@@ -872,27 +925,28 @@
                 <div class="w-full mb-6 relative">
                     <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[15%]">
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_16_foto_1.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <!-- shrink-0 eklendi -->
+                            <img src="jpegs/etkinlik_16_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_16_foto_2.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_16_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_16_foto_3.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_16_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_16_foto_4.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_16_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_16_foto_5.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_16_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_16_foto_6.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_16_foto_6.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                     </div>
                 </div>
                 <h3 class="text-xl md:text-2xl font-bold text-white mb-6" data-tr="EGEKAF 2025 Kariyer Fuarı" data-en="EGEKAF 2025 Career Fair">EGEKAF 2025 Kariyer Fuarı</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-stretch">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 items-stretch">
                     <div class="bg-cyan-950/30 border border-cyan-900/50 rounded-xl p-4 flex flex-col justify-start h-full">
                         <span class="text-[10px] font-bold text-cyan-500 mb-1 tracking-wider" data-tr="DÜZENLEYEN" data-en="ORGANIZER">DÜZENLEYEN</span>
                         <span class="text-sm font-medium text-cyan-50" data-tr="CBİKO & MCBÜ" data-en="CBİKO & MCBU">CBİKO & MCBÜ</span>
@@ -916,27 +970,28 @@
                 <div class="w-full mb-6 relative">
                     <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[15%]">
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_17_foto_1.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <!-- shrink-0 eklendi -->
+                            <img src="jpegs/etkinlik_17_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_17_foto_2.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_17_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_17_foto_3.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_17_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_17_foto_4.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_17_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_17_foto_5.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_17_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_17_foto_6.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_17_foto_6.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                     </div>
                 </div>
                 <h3 class="text-xl md:text-2xl font-bold text-white mb-6" data-tr="EHSİM Elektronik Harp Ziyareti" data-en="EHSIM Electronic Warfare Visit">EHSİM Elektronik Harp Ziyareti</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-stretch">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 items-stretch">
                     <div class="bg-cyan-950/30 border border-cyan-900/50 rounded-xl p-4 flex flex-col justify-start h-full">
                         <span class="text-[10px] font-bold text-cyan-500 mb-1 tracking-wider" data-tr="DÜZENLEYEN" data-en="ORGANIZER">DÜZENLEYEN</span>
                         <span class="text-sm font-medium text-cyan-50" data-tr="CIGRE IDU" data-en="CIGRE IDU">CIGRE IDU</span>
@@ -952,7 +1007,7 @@
                 </div>
                 <div class="mt-auto pt-5 border-t border-cyan-800/40">
                     <h4 class="text-[11px] font-bold text-cyan-500 mb-2 tracking-wider" data-tr="ETKİNLİK AÇIKLAMASI" data-en="EVENT DESCRIPTION">ETKİNLİK AÇIKLAMASI</h4>
-                    <p class="text-sm text-slate-400 leading-relaxed" data-tr="EHSİM Elektronik Harp Sistemleri'nin Hacettepe Teknokent'teki Ar-Ge merkezini ziyaret ettik. 'Hilal İHA' takımımız için mentorluk aldık ve elektronik harp teknolojilerindeki son gelişmeleri inceledik. 🛰️" data-en="Visited the R&D center of EHSIM Electronic Warfare Systems at Hacettepe Teknokent. Received mentorship for our 'Hilal UAV' team and examined recent developments in electronic warfare technologies. 🛰️">EHSİM Elektronik Harp Sistemleri'nin Hacettepe Teknokent'teki Ar-Ge merkezini ziyaret ettik. 'Hilal İHA' takımımız için mentorluk aldık ve elektronik harp teknolojilerindeki son gelişmeleri inceledik. 🛰️</p>
+                    <p class="text-sm text-slate-400 leading-relaxed" data-tr="EHSİM Elektronik Harp Sistemleri'nin Hacettepe Teknokent'teki Ar-Ge merkezini ziyaret ettik. 'Hilal İHA' takımımız için mentorluk aldık ve elektronik harp teknolojilerindeki son gelişmeleri inceledim. 🛰️" data-en="Visited the R&D center of EHSIM Electronic Warfare Systems at Hacettepe Teknokent. Received mentorship for our 'Hilal UAV' team and examined recent developments in electronic warfare technologies. 🛰️">EHSİM Elektronik Harp Sistemleri'nin Hacettepe Teknokent'teki Ar-Ge merkezini ziyaret ettik. 'Hilal İHA' takımımız için mentorluk aldık ve elektronik harp teknolojilerindeki son gelişmeleri inceledim. 🛰️</p>
                 </div>
             </div>
 
@@ -960,27 +1015,28 @@
                 <div class="w-full mb-6 relative">
                     <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[15%]">
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_18_foto_1.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <!-- shrink-0 eklendi -->
+                            <img src="jpegs/etkinlik_18_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_18_foto_2.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_18_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_18_foto_3.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_18_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_18_foto_4.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_18_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_18_foto_5.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_18_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_18_foto_6.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_18_foto_6.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                     </div>
                 </div>
                 <h3 class="text-xl md:text-2xl font-bold text-white mb-6" data-tr="Teleset Group Ar-Ge Gezisi" data-en="Teleset Group R&D Tour">Teleset Group Ar-Ge Gezisi</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-stretch">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 items-stretch">
                     <div class="bg-cyan-950/30 border border-cyan-900/50 rounded-xl p-4 flex flex-col justify-start h-full">
                         <span class="text-[10px] font-bold text-cyan-500 mb-1 tracking-wider" data-tr="DÜZENLEYEN" data-en="ORGANIZER">DÜZENLEYEN</span>
                         <span class="text-sm font-medium text-cyan-50" data-tr="CIGRE IDU" data-en="CIGRE IDU">CIGRE IDU</span>
@@ -1004,27 +1060,28 @@
                 <div class="w-full mb-6 relative">
                     <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[15%]">
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_19_foto_1.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <!-- shrink-0 eklendi -->
+                            <img src="jpegs/etkinlik_19_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_19_foto_2.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_19_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_19_foto_3.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_19_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_19_foto_4.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_19_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_19_foto_5.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_19_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_19_foto_6.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_19_foto_6.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                     </div>
                 </div>
                 <h3 class="text-xl md:text-2xl font-bold text-white mb-6" data-tr="Yerel Gençlik Stratejisi Çalıştayı" data-en="Local Youth Strategy Workshop">Yerel Gençlik Stratejisi Çalıştayı</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-stretch">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 items-stretch">
                     <div class="bg-cyan-950/30 border border-cyan-900/50 rounded-xl p-4 flex flex-col justify-start h-full">
                         <span class="text-[10px] font-bold text-cyan-500 mb-1 tracking-wider" data-tr="DÜZENLEYEN" data-en="ORGANIZER">DÜZENLEYEN</span>
                         <span class="text-sm font-medium text-cyan-50" data-tr="İzmir Kent Konseyi" data-en="Izmir City Council">İzmir Kent Konseyi</span>
@@ -1048,27 +1105,28 @@
                 <div class="w-full mb-6 relative">
                     <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[15%]">
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_20_foto_1.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <!-- shrink-0 eklendi -->
+                            <img src="jpegs/etkinlik_20_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_20_foto_2.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_20_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_20_foto_3.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_20_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_20_foto_4.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_20_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_20_foto_5.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_20_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                         <div class="snap-center shrink-0 w-[70%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-cyan-900/50 gallery-item blurred-item" onclick="if(this.classList.contains('active-center')) openImageModal(this.querySelector('img').src); else this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });">
-                            <img src="jpegs/etkinlik_20_foto_6.jpg" class="w-full h-full object-cover pointer-events-none" onerror="this.parentElement.remove();">
+                            <img src="jpegs/etkinlik_20_foto_6.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
                         </div>
                     </div>
                 </div>
                 <h3 class="text-xl md:text-2xl font-bold text-white mb-6" data-tr="T3 Görüntü İşleme Atölyesi" data-en="T3 Image Processing Workshop">T3 Görüntü İşleme Atölyesi</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 items-stretch">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 items-stretch">
                     <div class="bg-cyan-950/30 border border-cyan-900/50 rounded-xl p-4 flex flex-col justify-start h-full">
                         <span class="text-[10px] font-bold text-cyan-500 mb-1 tracking-wider" data-tr="DÜZENLEYEN" data-en="ORGANIZER">DÜZENLEYEN</span>
                         <span class="text-sm font-medium text-cyan-50" data-tr="T3" data-en="T3">T3</span>
@@ -1095,3 +1153,59 @@
         </div>
     </div>
 </div>
+
+<script>
+    // ... (Script kısmı da orijinaldeki gibi, galerilerin çalışması için) ...
+    // 4. Galerinin Başlatılması ve Ortadaki Fotoğrafa Odaklanma
+    document.addEventListener("DOMContentLoaded", () => {
+        const containers = document.querySelectorAll('.gallery-container');
+        if(!containers) return;
+
+        containers.forEach(container => {
+            const items = container.querySelectorAll('.gallery-item');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.remove('blurred-item');
+                        entry.target.classList.add('active-center');
+                    } else {
+                        entry.target.classList.add('blurred-item');
+                        entry.target.classList.remove('active-center');
+                    }
+                });
+            }, {
+                root: container,
+                threshold: 0.6 // %60'ı göründüğünde aktif olur
+            });
+
+            items.forEach(item => observer.observe(item));
+
+            // Klavye Kontrolü (Sağ/Sol)
+            container.addEventListener('keydown', (e) => {
+                const activeItem = container.querySelector('.active-center');
+                if(!activeItem) return;
+
+                if (e.key === 'ArrowRight') {
+                    const next = activeItem.nextElementSibling;
+                    if(next && next.classList.contains('gallery-item')) {
+                        next.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    }
+                } else if (e.key === 'ArrowLeft') {
+                    const prev = activeItem.previousElementSibling;
+                    if(prev && prev.classList.contains('gallery-item')) {
+                        prev.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    }
+                }
+            });
+
+            setTimeout(() => {
+                // Eğer galeri değil de tekil resim varsa (sertifikalar gibi) kaydırma yapma
+                if(items.length > 1) {
+                    const targetItem = items[0]; // İlk fotoda kalsın
+                    container.scrollLeft = 0;
+                }
+            }, 150);
+        });
+    });
+</script>
