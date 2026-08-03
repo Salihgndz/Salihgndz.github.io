@@ -1,29 +1,24 @@
 <style>
-    /* iOS Safari ve Esneklik Düzeltmeleri */
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-    .gallery-container {
-        scroll-behavior: smooth;
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch; /* İOS'ta parmakla kaydırmayı pürüzsüz yapar */
+    /* Mavi seçimi engellemek için */
+    .no-select {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
     }
 
-    /* iOS'un resimleri büzüştürmesini kesin engeller */
-    .gallery-item, .gallery-item img {
-        flex-shrink: 0 !important;
-        -webkit-flex-shrink: 0 !important;
-    }
-
-    /* Blur ve Netleşme Efekt Sınıfları */
-    .gallery-item { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
-    .blurred-item { filter: blur(4px); opacity: 0.5; transform: scale(0.90); }
-    .active-center { filter: blur(0); opacity: 1; transform: scale(1); cursor: zoom-in; box-shadow: 0 0 20px rgba(59,130,246,0.4); z-index: 20; }
-    .gallery-item:only-child { margin: 0 auto; }
+    /* Arka planda kaymayı engeller */
+    .modal-active { overflow: hidden !important; }
 </style>
 
 <!-- Mobilde çizgiyi kenardan kurtaran özel kapsayıcı (ml-4) ve taşma engeli (pr-4) -->
-<div class="relative pl-8 md:pl-10 ml-4 md:ml-0 w-full max-w-none mx-auto pr-4 md:pr-0">
+<div class="relative pl-8 md:pl-10 ml-4 md:ml-0 w-full max-w-none mx-auto pr-4 md:pr-0 overflow-x-hidden no-select animate-fadeIn">
+
+    <!-- BÜYÜK RESİM MODALI (MOBİL İÇİN) -->
+    <div id="imageModal" class="fixed inset-0 bg-[#050505]/98 backdrop-blur-md flex items-center justify-center transition-all duration-300 z-[99999] opacity-0 pointer-events-none p-4">
+        <button onclick="closeModal()" class="absolute top-6 right-6 text-slate-300 hover:text-cyan-400 text-5xl font-light focus:outline-none z-[100000] appearance-none">&times;</button>
+        <img id="modalImg" class="w-full max-h-[85vh] object-contain rounded-xl border-2 border-blue-500 shadow-[0_0_40px_rgba(59,130,246,0.4)] transition-transform duration-300 scale-95" src="" alt="Büyük Görsel">
+    </div>
+
     <!-- Ana Dikey Çizgi -->
     <div class="absolute left-0 top-0 bottom-0 w-[2px] bg-gradient-to-b from-blue-500 via-purple-500 to-transparent opacity-80"></div>
 
@@ -35,7 +30,7 @@
         </h2>
     </div>
 
-    <div class="flex flex-col gap-10 md:gap-16">
+    <div class="flex flex-col gap-10 md:gap-16 w-full">
 
         <!--------------------------------------------------------------------------------------------------------------------------------->
 
@@ -91,23 +86,10 @@
 
         <!PROJE 3>
         <div class="bg-blue-950/10 border border-blue-800/40 backdrop-blur-sm rounded-2xl p-5 md:p-8 hover:border-blue-500/50 transition-all duration-300 w-full flex flex-col shadow-lg">
-            <div class="w-full mb-6 relative">
-                <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[10%]">
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_3_foto_1.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_3_foto_2.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_3_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_3_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_3_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
+
+            <div class="w-full flex justify-center mb-6 mt-2">
+                <div class="relative w-[90%] max-w-[320px] aspect-video rounded-xl overflow-hidden border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.3)] cursor-pointer" onclick="openModal(this.querySelector('img').src)">
+                    <img src="jpegs/proje_3_foto_1.png" alt="Proje 3" class="w-full h-full object-cover">
                 </div>
             </div>
 
@@ -186,23 +168,10 @@
 
         <!PROJE 4>
         <div class="bg-blue-950/10 border border-blue-800/40 backdrop-blur-sm rounded-2xl p-5 md:p-8 hover:border-blue-500/50 transition-all duration-300 w-full flex flex-col shadow-lg">
-            <div class="w-full mb-6 relative">
-                <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[10%]">
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_4_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_4_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_4_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_4_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_4_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
+
+            <div class="w-full flex justify-center mb-6 mt-2">
+                <div class="relative w-[90%] max-w-[320px] aspect-video rounded-xl overflow-hidden border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.3)] cursor-pointer" onclick="openModal(this.querySelector('img').src)">
+                    <img src="jpegs/proje_4_foto_1.jpg" alt="Proje 4" class="w-full h-full object-cover">
                 </div>
             </div>
 
@@ -280,62 +249,10 @@
 
         <!PROJE 5>
         <div class="bg-blue-950/10 border border-blue-800/40 backdrop-blur-sm rounded-2xl p-5 md:p-8 hover:border-blue-500/50 transition-all duration-300 w-full flex flex-col shadow-lg">
-            <div class="w-full mb-6 relative">
-                <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[10%]">
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_5_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_5_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_5_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_5_foto_4.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_5_foto_5.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_5_foto_6.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_5_foto_7.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_5_foto_8.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_5_foto_9.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_5_foto_10.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_5_foto_11.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_5_foto_12.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_5_foto_13.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_5_foto_14.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_5_foto_15.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_5_foto_16.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_5_foto_17.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_5_foto_18.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
+
+            <div class="w-full flex justify-center mb-6 mt-2">
+                <div class="relative w-[90%] max-w-[320px] aspect-video rounded-xl overflow-hidden border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.3)] cursor-pointer" onclick="openModal(this.querySelector('img').src)">
+                    <img src="jpegs/proje_5_foto_1.jpg" alt="Proje 5" class="w-full h-full object-cover">
                 </div>
             </div>
 
@@ -409,68 +326,10 @@
 
         <!PROJE 6>
         <div class="bg-blue-950/10 border border-blue-800/40 backdrop-blur-sm rounded-2xl p-5 md:p-8 hover:border-blue-500/50 transition-all duration-300 w-full flex flex-col shadow-lg">
-            <div class="w-full mb-6 relative">
-                <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[10%]">
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_6_foto_1.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_6_foto_2.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_6_foto_3.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_6_foto_4.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_6_foto_5.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_6_foto_6.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_6_foto_7.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_6_foto_8.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_6_foto_9.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_6_foto_10.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_6_foto_11.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_6_foto_12.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_6_foto_13.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_6_foto_14.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_6_foto_15.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_6_foto_16.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_6_foto_17.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_6_foto_18.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_6_foto_19.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_6_foto_20.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
+
+            <div class="w-full flex justify-center mb-6 mt-2">
+                <div class="relative w-[90%] max-w-[320px] aspect-video rounded-xl overflow-hidden border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.3)] cursor-pointer" onclick="openModal(this.querySelector('img').src)">
+                    <img src="jpegs/proje_6_foto_1.png" alt="Proje 6" class="w-full h-full object-cover">
                 </div>
             </div>
 
@@ -548,74 +407,10 @@
 
         <!PROJE 7>
         <div class="bg-blue-950/10 border border-blue-800/40 backdrop-blur-sm rounded-2xl p-5 md:p-8 hover:border-blue-500/50 transition-all duration-300 w-full flex flex-col shadow-lg">
-            <div class="w-full mb-6 relative">
-                <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[10%]">
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_7_foto_1.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_7_foto_2.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_7_foto_3.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_7_foto_4.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_7_foto_5.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_7_foto_6.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_7_foto_7.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_7_foto_8.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_7_foto_9.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_7_foto_10.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_7_foto_11.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_7_foto_12.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_7_foto_13.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_7_foto_14.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_7_foto_15.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_7_foto_16.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_7_foto_17.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_7_foto_18.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_7_foto_19.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_7_foto_20.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_7_foto_21.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_7_foto_22.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
+
+            <div class="w-full flex justify-center mb-6 mt-2">
+                <div class="relative w-[90%] max-w-[320px] aspect-video rounded-xl overflow-hidden border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.3)] cursor-pointer" onclick="openModal(this.querySelector('img').src)">
+                    <img src="jpegs/proje_7_foto_1.png" alt="Proje 7" class="w-full h-full object-cover">
                 </div>
             </div>
 
@@ -685,29 +480,10 @@
 
         <!PROJE 8>
         <div class="bg-blue-950/10 border border-blue-800/40 backdrop-blur-sm rounded-2xl p-5 md:p-8 hover:border-blue-500/50 transition-all duration-300 w-full flex flex-col shadow-lg">
-            <div class="w-full mb-6 relative">
-                <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[10%]">
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_8_foto_1.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_8_foto_2.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_8_foto_3.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_8_foto_4.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_8_foto_5.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_8_foto_6.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_8_foto_7.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
+
+            <div class="w-full flex justify-center mb-6 mt-2">
+                <div class="relative w-[90%] max-w-[320px] aspect-video rounded-xl overflow-hidden border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.3)] cursor-pointer" onclick="openModal(this.querySelector('img').src)">
+                    <img src="jpegs/proje_8_foto_1.png" alt="Proje 8" class="w-full h-full object-cover">
                 </div>
             </div>
 
@@ -783,14 +559,10 @@
 
         <!PROJE 9>
         <div class="bg-blue-950/10 border border-blue-800/40 backdrop-blur-sm rounded-2xl p-5 md:p-8 hover:border-blue-500/50 transition-all duration-300 w-full flex flex-col shadow-lg">
-            <div class="w-full mb-6 relative">
-                <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[10%]">
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_9_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_9_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
+
+            <div class="w-full flex justify-center mb-6 mt-2">
+                <div class="relative w-[90%] max-w-[320px] aspect-video rounded-xl overflow-hidden border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.3)] cursor-pointer" onclick="openModal(this.querySelector('img').src)">
+                    <img src="jpegs/proje_9_foto_1.jpg" alt="Proje 9" class="w-full h-full object-cover">
                 </div>
             </div>
 
@@ -862,17 +634,10 @@
 
         <!PROJE 10>
         <div class="bg-blue-950/10 border border-blue-800/40 backdrop-blur-sm rounded-2xl p-5 md:p-8 hover:border-blue-500/50 transition-all duration-300 w-full flex flex-col shadow-lg">
-            <div class="w-full mb-6 relative">
-                <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[10%]">
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_10_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_10_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_10_foto_3.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
+
+            <div class="w-full flex justify-center mb-6 mt-2">
+                <div class="relative w-[90%] max-w-[320px] aspect-video rounded-xl overflow-hidden border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.3)] cursor-pointer" onclick="openModal(this.querySelector('img').src)">
+                    <img src="jpegs/proje_10_foto_1.jpg" alt="Proje 10" class="w-full h-full object-cover">
                 </div>
             </div>
 
@@ -952,23 +717,10 @@
 
         <!PROJE 11>
         <div class="bg-blue-950/10 border border-blue-800/40 backdrop-blur-sm rounded-2xl p-5 md:p-8 hover:border-blue-500/50 transition-all duration-300 w-full flex flex-col shadow-lg">
-            <div class="w-full mb-6 relative">
-                <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[10%]">
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_11_foto_1.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_11_foto_2.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_11_foto_3.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_11_foto_4.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_11_foto_5.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
+
+            <div class="w-full flex justify-center mb-6 mt-2">
+                <div class="relative w-[90%] max-w-[320px] aspect-video rounded-xl overflow-hidden border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.3)] cursor-pointer" onclick="openModal(this.querySelector('img').src)">
+                    <img src="jpegs/proje_11_foto_1.png" alt="Proje 11" class="w-full h-full object-cover">
                 </div>
             </div>
 
@@ -1040,17 +792,10 @@
 
         <!PROJE 12>
         <div class="bg-blue-950/10 border border-blue-800/40 backdrop-blur-sm rounded-2xl p-5 md:p-8 hover:border-blue-500/50 transition-all duration-300 w-full flex flex-col shadow-lg">
-            <div class="w-full mb-6 relative">
-                <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[10%]">
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_12_foto_1.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_12_foto_2.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_12_foto_3.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
+
+            <div class="w-full flex justify-center mb-6 mt-2">
+                <div class="relative w-[90%] max-w-[320px] aspect-video rounded-xl overflow-hidden border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.3)] cursor-pointer" onclick="openModal(this.querySelector('img').src)">
+                    <img src="jpegs/proje_12_foto_1.png" alt="Proje 12" class="w-full h-full object-cover">
                 </div>
             </div>
 
@@ -1122,20 +867,10 @@
 
         <!PROJE 13>
         <div class="bg-blue-950/10 border border-blue-800/40 backdrop-blur-sm rounded-2xl p-5 md:p-8 hover:border-blue-500/50 transition-all duration-300 w-full flex flex-col shadow-lg">
-            <div class="w-full mb-6 relative">
-                <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[10%]">
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_13_foto_1.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_13_foto_2.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_13_foto_3.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_13_foto_4.png" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
+
+            <div class="w-full flex justify-center mb-6 mt-2">
+                <div class="relative w-[90%] max-w-[320px] aspect-video rounded-xl overflow-hidden border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.3)] cursor-pointer" onclick="openModal(this.querySelector('img').src)">
+                    <img src="jpegs/proje_13_foto_1.png" alt="Proje 13" class="w-full h-full object-cover">
                 </div>
             </div>
 
@@ -1224,14 +959,9 @@
                 </div>
             </div>
 
-            <div class="w-full mb-6 relative">
-                <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[10%]">
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_14_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_14_foto_2.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
+            <div class="w-full flex justify-center mb-6 mt-2 relative z-0">
+                <div class="relative w-[90%] max-w-[320px] aspect-video rounded-xl overflow-hidden border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.3)] cursor-pointer" onclick="openModal(this.querySelector('img').src)">
+                    <img src="jpegs/proje_14_foto_1.jpg" alt="Proje 14" class="w-full h-full object-cover">
                 </div>
             </div>
 
@@ -1248,7 +978,7 @@
                 </div>
             </div>
 
-            <div class="w-full flex items-center justify-center gap-3 bg-orange-900/20 border border-orange-500/50 text-orange-400 p-4 rounded-xl font-medium mt-auto">
+            <div class="w-full flex items-center justify-center gap-3 bg-orange-900/20 border border-orange-500/50 text-orange-400 p-4 rounded-xl font-medium mt-auto shadow-[0_0_15px_rgba(249,115,22,0.15)]">
                 <svg class="w-6 h-6 animate-pulse shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
@@ -1259,11 +989,9 @@
         <!PROJE 15>
         <div class="bg-blue-950/10 border border-blue-800/40 backdrop-blur-sm rounded-2xl p-5 md:p-8 hover:border-blue-500/50 transition-all duration-300 w-full flex flex-col shadow-lg">
 
-            <div class="w-full mb-6 relative">
-                <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar gallery-container gap-4 pb-2 pt-2 items-center px-[10%]">
-                    <div class="snap-center shrink-0 w-[85%] md:w-[60%] aspect-video bg-[#0a0a0a] rounded-xl overflow-hidden border border-blue-900/50 gallery-item blurred-item" onclick="handleGalleryClick(this)">
-                        <img src="jpegs/proje_15_foto_1.jpg" class="w-full h-full object-cover pointer-events-none shrink-0" onerror="this.parentElement.remove();">
-                    </div>
+            <div class="w-full flex justify-center mb-6 mt-2">
+                <div class="relative w-[90%] max-w-[320px] aspect-video rounded-xl overflow-hidden border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.3)] cursor-pointer" onclick="openModal(this.querySelector('img').src)">
+                    <img src="jpegs/proje_15_foto_1.jpg" alt="Proje 15" class="w-full h-full object-cover">
                 </div>
             </div>
 
@@ -1296,58 +1024,34 @@
 </div>
 
 <script>
-    // Ortadaki Fotoğrafa Odaklanma ve Galeri Başlatma
-    document.addEventListener("DOMContentLoaded", () => {
-        const containers = document.querySelectorAll('.gallery-container');
-        if(!containers) return;
+    function openModal(src) {
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImg');
+        if (!modal || !modalImg) return;
 
-        containers.forEach(container => {
-            const items = container.querySelectorAll('.gallery-item');
+        modalImg.src = src;
+        modal.style.opacity = '1';
+        modal.style.pointerEvents = 'auto';
+        document.body.classList.add('modal-active'); // Arkada kaymayı engeller
 
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.remove('blurred-item');
-                        entry.target.classList.add('active-center');
-                    } else {
-                        entry.target.classList.add('blurred-item');
-                        entry.target.classList.remove('active-center');
-                    }
-                });
-            }, {
-                root: container,
-                threshold: 0.5 // Mobilde daha kolay merkezleme için 0.6'dan 0.5'e çekildi
-            });
+        setTimeout(() => { modalImg.style.transform = 'scale(1)'; }, 10);
+    }
 
-            items.forEach(item => observer.observe(item));
+    function closeModal() {
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImg');
+        if (!modal || !modalImg) return;
 
-            // Klavye Kontrolü (Sağ/Sol)
-            container.addEventListener('keydown', (e) => {
-                const activeItem = container.querySelector('.active-center');
-                if(!activeItem) return;
+        modal.style.opacity = '0';
+        modal.style.pointerEvents = 'none';
+        modalImg.style.transform = 'scale(0.95)';
+        document.body.classList.remove('modal-active');
+    }
 
-                if (e.key === 'ArrowRight') {
-                    const next = activeItem.nextElementSibling;
-                    if(next && next.classList.contains('gallery-item')) {
-                        next.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                    }
-                } else if (e.key === 'ArrowLeft') {
-                    const prev = activeItem.previousElementSibling;
-                    if(prev && prev.classList.contains('gallery-item')) {
-                        prev.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                    }
-                }
-            });
-
-            setTimeout(() => {
-                if(items.length > 1) {
-                    const targetItem = items[1]; // İkinci resim (galeri hissi için)
-                    container.scrollLeft = targetItem.offsetLeft - (container.offsetWidth / 2) + (targetItem.offsetWidth / 2);
-                } else if(items.length === 1) {
-                    const targetItem = items[0]; // Tek resimse ortala
-                    container.scrollLeft = 0;
-                }
-            }, 150);
+    const imageModal = document.getElementById('imageModal');
+    if (imageModal) {
+        imageModal.addEventListener('click', function(e) {
+            if(e.target === this) closeModal();
         });
-    });
+    }
 </script>
