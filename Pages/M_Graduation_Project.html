@@ -1,10 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div class="w-full mx-auto text-left py-2 animate-fadeIn no-select relative overflow-x-hidden px-4 md:px-0">
 
-</body>
-</html>
+    <div class="relative w-full max-w-lg mx-auto pb-12">
+
+        <!-- BAŞLIK ALANI -->
+        <div class="text-center mb-8 mt-4">
+            <h2 class="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 mb-3 tracking-tight"
+                data-tr="LİSANS BİTİRME PROJESİ"
+                data-en="GRADUATION PROJECT">LİSANS BİTİRME PROJESİ</h2>
+
+            <!-- Şık bir ayırıcı çizgi -->
+            <div class="h-1 w-16 bg-gradient-to-r from-cyan-400 to-purple-400 mx-auto mb-5 rounded-full"></div>
+
+            <h3 class="text-lg md:text-xl font-semibold text-white leading-snug px-2"
+                data-tr="Değişen Şartlara Karşı İnsansız Hava Araçlarında Dengeli ve Stabil Uçuş İçin PID Kontrolcü Tasarımı"
+                data-en="PID Controller Design for Stable and Balanced Flight in Unmanned Aerial Vehicles Under Varying Conditions">
+                Değişen Şartlara Karşı İnsansız Hava Araçlarında Dengeli ve Stabil Uçuş İçin PID Kontrolcü Tasarımı
+            </h3>
+        </div>
+
+        <!-- PROJE KARTI -->
+        <div class="bg-cyan-950/20 border border-cyan-800/40 backdrop-blur-md rounded-2xl p-5 hover:border-cyan-500/50 transition-all duration-300 shadow-[0_0_30px_rgba(6,182,212,0.1)] relative overflow-hidden flex flex-col">
+
+            <span class="text-[10px] font-bold text-cyan-500 mb-3 block tracking-wider uppercase" data-tr="PROJE ÖZETİ" data-en="PROJECT SUMMARY">PROJE ÖZETİ</span>
+
+            <p class="text-sm text-slate-300 leading-relaxed mb-6 text-justify break-words"
+               data-tr="Bu proje, lisans eğitimim boyunca edindiğim mühendislik disiplinlerini tek bir sistemde birleştiren multidisipliner bir çalışmadır. Sabit kanatlı bir İHA'nın tasarımından analizine ve üretimine kadar tüm süreçlerde aktif rol aldığım bu projede; kendi BLDC motor sürücümüzün tasarımı, görüntü işleme ile havadan otonom İHA tespiti ve kontrol yüzeyleri için MATLAB üzerinde PID kontrolcü tasarımı gerçekleştirilmektedir. Geliştirilen kontrol sistemi, ROS2 ve Gazebo simülasyon ortamlarında test edilerek zorlu şartlarda uçuş stabilizasyonu sağlanacaktır."
+               data-en="This project is a multidisciplinary study that unifies the engineering disciplines I have acquired throughout my undergraduate education. Taking an active role in all processes from the design to the production of a fixed-wing UAV, this project involves designing a custom BLDC motor driver, implementing image processing-based aerial vehicle detection, and designing a PID controller in MATLAB for the control surfaces. The developed control system will be tested in ROS2 and Gazebo simulation environments to ensure flight stabilization under challenging conditions.">
+                Bu proje, lisans eğitimim boyunca edindiğim mühendislik disiplinlerini tek bir sistemde birleştiren multidisipliner bir çalışmadır. Sabit kanatlı bir İHA'nın tasarımından analizine ve üretimine kadar tüm süreçlerde aktif rol aldığım bu projede; kendi BLDC motor sürücümüzün tasarımı, görüntü işleme ile havadan otonom İHA tespiti ve kontrol yüzeyleri için MATLAB üzerinde PID kontrolcü tasarımı gerçekleştirilmektedir. Geliştirilen kontrol sistemi, ROS2 ve Gazebo simülasyon ortamlarında test edilerek zorlu şartlarda uçuş stabilizasyonu sağlanacaktır.
+            </p>
+
+            <!-- İlgili Alanlar & Teknolojiler (Mobilde alt alta, ferah görünüm) -->
+            <div class="grid grid-cols-1 gap-4 mb-6">
+                <div class="bg-cyan-950/40 border border-cyan-900/50 rounded-xl p-4 flex flex-col justify-center">
+                    <span class="text-[10px] font-bold text-cyan-500 mb-1 tracking-wider" data-tr="İLGİLİ ALANLAR" data-en="RELATED FIELDS">İLGİLİ ALANLAR</span>
+                    <span class="text-xs font-medium text-cyan-50 break-words" data-tr="Kontrol Sistemleri, Otonom Sistemler, Görüntü İşleme, Güç Elektroniği" data-en="Control Systems, Autonomous Systems, Image Processing, Power Electronics">Kontrol Sistemleri, Otonom Sistemler, Görüntü İşleme, Güç Elektroniği</span>
+                </div>
+                <div class="bg-cyan-950/40 border border-cyan-900/50 rounded-xl p-4 flex flex-col justify-center">
+                    <span class="text-[10px] font-bold text-cyan-500 mb-1 tracking-wider" data-tr="KULLANILAN TEKNOLOJİLER" data-en="TECHNOLOGIES USED">KULLANILAN TEKNOLOJİLER</span>
+                    <span class="text-xs font-medium text-cyan-50 break-words">MATLAB, ROS2, Gazebo, OpenCV, Altium</span>
+                </div>
+            </div>
+
+            <!-- Uyarı / Durum Kutusu -->
+            <div class="w-full flex items-start gap-3 bg-orange-900/20 border border-orange-500/50 text-orange-400 p-4 rounded-xl mt-auto shadow-[0_0_15px_rgba(249,115,22,0.15)]">
+                <!-- shrink-0 ile ikonun yazılar tarafından ezilmesi engellendi -->
+                <svg class="w-5 h-5 shrink-0 animate-pulse mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span class="text-xs sm:text-sm font-medium leading-snug break-words" data-tr="Proje Çalışmaları Aktif Olarak Devam Etmektedir..." data-en="Project Development is Actively Ongoing...">Proje Çalışmaları Aktif Olarak Devam Etmektedir...</span>
+            </div>
+
+        </div>
+    </div>
+</div>
